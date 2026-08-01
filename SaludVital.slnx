@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SaludVital.Tests/SaludVital.Tests.csproj" />
+  <Project Path="SaludVital/SaludVital.csproj" />
+    
+    
+</Solution>

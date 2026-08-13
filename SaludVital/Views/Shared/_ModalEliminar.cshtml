@@ -1,0 +1,23 @@
+@* Modal de confirmación de eliminación, animado. Lo activan los botones con
+   [data-eliminar]: site.js rellena el texto, la URL y el id antes de mostrarlo. *@
+<div class="modal fade sv-modal" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarTitulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title sv-modal-titulo" id="modalEliminarTitulo">¿Confirmar eliminación?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0" id="modalEliminarTexto">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn sv-btn-secundario" data-bs-dismiss="modal">Cancelar</button>
+                <form id="formEliminar" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="inputEliminarId" />
+                    <button type="submit" class="btn sv-btn-peligro">Sí, eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

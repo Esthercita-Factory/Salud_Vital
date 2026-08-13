@@ -1,0 +1,29 @@
+@model Mascota
+@{
+    ViewData["Title"] = "Registrar mascota";
+}
+
+<div class="sv-cabecera-ficha">
+    <div>
+        <h1 class="sv-titulo-pagina mb-1">Registrar mascota</h1>
+        <p class="sv-subtitulo mb-0">Complete los datos del nuevo paciente.</p>
+    </div>
+    <a class="btn sv-btn-secundario" asp-action="Index">Volver al catálogo</a>
+</div>
+
+<div class="sv-ficha">
+    <form asp-action="Crear" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <partial name="_CamposMascota" model="Model" />
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn sv-btn-primario">Registrar mascota</button>
+            <a class="btn sv-btn-secundario" asp-action="Index">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

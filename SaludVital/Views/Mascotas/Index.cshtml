@@ -1,0 +1,112 @@
+@model List<Mascota>
+@{
+    ViewData["Title"] = "Mascotas";
+    var busqueda = ViewBag.Busqueda as string;
+}
+
+<div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="sv-titulo-pagina mb-1">Mascotas</h1>
+        <p class="sv-subtitulo mb-0">Pacientes registrados en Patitas Felices.</p>
+    </div>
+    <a class="btn sv-btn-primario" asp-action="Crear">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+        </svg>
+        Nueva mascota
+    </a>
+</div>
+
+<form method="get" action="@Url.Action(nameof(MascotasController.Index), "Mascotas")" class="row g-2 mb-4" role="search">
+    <div class="col-12 col-md-6 col-lg-5">
+        <label for="busqueda" class="visually-hidden">Buscar por nombre, especie, raza o dueño</label>
+        <input type="search" id="busqueda" name="busqueda" value="@busqueda" class="form-control"
+               placeholder="Buscar por nombre, especie, raza o dueño..." />
+    </div>
+    <div class="col-auto d-flex gap-2">
+        <button type="submit" class="btn sv-btn-secundario">Buscar</button>
+        @if (!string.IsNullOrWhiteSpace(busqueda))
+        {
+            <a class="btn sv-btn-secundario" asp-action="Index">Limpiar</a>
+        }
+    </div>
+</form>
+
+@if (Model.Count == 0)
+{
+    <div class="sv-vacio">
+        <p class="mb-2">No se encontraron mascotas@(string.IsNullOrWhiteSpace(busqueda) ? "" : " con ese criterio de búsqueda").</p>
+        <a class="btn sv-btn-primario" asp-action="Crear">Registrar la primera mascota</a>
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var mascota in Model)
+        {
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="sv-tarjeta-mascota">
+                    <div class="sv-tarjeta-cabeza">
+                        <h3 class="sv-tarjeta-nombre">@mascota.Nombre</h3>
+                        <span class="sv-estado @(mascota.EstaActivo ? "" : "inactivo")">@(mascota.EstaActivo ? "Activo" : "Inactivo")</span>
+                    </div>
+                    <dl class="sv-tarjeta-datos">
+                        <div>
+                            <dt>Especie</dt>
+                            <dd>@mascota.Especie</dd>
+                        </div>
+                        <div>
+                            <dt>Raza</dt>
+                            <dd>@mascota.Raza</dd>
+                        </div>
+                        <div>
+                            <dt>Sexo</dt>
+                            <dd>@(mascota.Sexo == Sexo.Macho ? "Macho" : "Hembra")</dd>
+                        </div>
+                        <div>
+                            <dt>Edad</dt>
+                            <dd>@mascota.EdadEnMeses meses</dd>
+                        </div>
+                        <div>
+                            <dt>Peso</dt>
+                            <dd>@mascota.PesoEnKg.ToString("0.##") kg</dd>
+                        </div>
+                        <div>
+                            <dt>Dueño</dt>
+                            <dd class="text-truncate" title="@mascota.NombreDelDuenio">@mascota.NombreDelDuenio</dd>
+                        </div>
+                    </dl>
+                    <div class="sv-tarjeta-pie">
+                        <button type="button" class="sv-icono-btn sv-icono-ver"
+                                onclick="location.href='@Url.Action(nameof(MascotasController.Detalles), "Mascotas", new { id = mascota.Id })'"
+                                title="Ver ficha" aria-label="Ver ficha de @mascota.Nombre">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/>
+                            </svg>
+                        </button>
+                        <button type="button" class="sv-icono-btn sv-icono-editar"
+                                onclick="location.href='@Url.Action(nameof(MascotasController.Editar), "Mascotas", new { id = mascota.Id })'"
+                                title="Editar" aria-label="Editar a @mascota.Nombre">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                            </svg>
+                        </button>
+                        <button type="button" class="sv-icono-btn sv-icono-peligro"
+                                data-eliminar
+                                data-url="@Url.Action(nameof(MascotasController.ConfirmarEliminar), "Mascotas", new { id = mascota.Id })"
+                                data-mensaje="Se eliminará a @mascota.Nombre junto con sus @(mascota.Consultas.Count) consulta(s). Esta acción no se puede deshacer."
+                                title="Eliminar" aria-label="Eliminar a @mascota.Nombre">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<partial name="_ModalEliminar" />

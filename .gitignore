@@ -3,3 +3,6 @@ obj/
 *.user
 .vs/
 .idea/
+*.db
+*.sqlite
+artifacts/

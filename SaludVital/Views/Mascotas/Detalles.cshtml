@@ -1,0 +1,121 @@
+@model Mascota
+@{
+    ViewData["Title"] = $"Ficha de {Model.Nombre}";
+}
+
+<div class="sv-cabecera-ficha">
+    <div>
+        <h1 class="sv-titulo-pagina mb-1">@Model.Nombre</h1>
+        <p class="sv-subtitulo mb-0">@Model.Especie · @Model.Raza · @(Model.Sexo == Sexo.Macho ? "Macho" : "Hembra")</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        <a class="btn sv-btn-primario" asp-controller="Consultas" asp-action="Crear" asp-route-mascotaId="@Model.Id">Nueva consulta</a>
+        <a class="btn sv-btn-secundario" asp-action="Editar" asp-route-id="@Model.Id">Editar</a>
+        <button type="button" class="btn sv-btn-peligro"
+                data-eliminar
+                data-url="@Url.Action(nameof(MascotasController.ConfirmarEliminar), "Mascotas", new { id = Model.Id })"
+                data-mensaje="Se eliminará a @Model.Nombre junto con sus @(Model.Consultas.Count) consulta(s). Esta acción no se puede deshacer.">
+            Eliminar
+        </button>
+    </div>
+</div>
+
+<section class="sv-ficha mb-4">
+    <h2 class="sv-seccion-titulo">Datos generales</h2>
+    <dl class="sv-ficha-datos">
+        <div>
+            <dt>Estado</dt>
+            <dd><span class="sv-estado @(Model.EstaActivo ? "" : "inactivo")">@(Model.EstaActivo ? "Activo" : "Inactivo")</span></dd>
+        </div>
+        <div>
+            <dt>Edad</dt>
+            <dd>@Model.EdadEnMeses meses</dd>
+        </div>
+        <div>
+            <dt>Peso</dt>
+            <dd>@Model.PesoEnKg.ToString("0.##") kg</dd>
+        </div>
+        <div>
+            <dt>Dueño</dt>
+            <dd>@Model.NombreDelDuenio</dd>
+        </div>
+        <div>
+            <dt>Teléfono del dueño</dt>
+            <dd>@Model.TelefonoDelDuenio</dd>
+        </div>
+        <div>
+            <dt>Notas</dt>
+            <dd>@(string.IsNullOrWhiteSpace(Model.Notas) ? "Sin notas." : Model.Notas)</dd>
+        </div>
+    </dl>
+</section>
+
+<section class="sv-ficha">
+    <h2 class="sv-seccion-titulo">Historial de consultas (@Model.Consultas.Count)</h2>
+
+    @if (Model.Consultas.Count == 0)
+    {
+        <p class="sv-subtitulo mb-2">Esta mascota aún no tiene consultas registradas.</p>
+        <a class="btn sv-btn-secundario" asp-controller="Consultas" asp-action="Crear" asp-route-mascotaId="@Model.Id">Registrar la primera</a>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table sv-tabla">
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Motivo</th>
+                        <th scope="col">Diagnóstico</th>
+                        <th scope="col">Tratamiento</th>
+                        <th scope="col" class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var consulta in Model.Consultas.OrderByDescending(c => c.Fecha))
+                    {
+                        <tr>
+                            <td class="text-nowrap">@consulta.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td>@consulta.Motivo</td>
+                            <td>@(string.IsNullOrWhiteSpace(consulta.Diagnostico) ? "—" : consulta.Diagnostico)</td>
+                            <td>@(string.IsNullOrWhiteSpace(consulta.Tratamiento) ? "—" : consulta.Tratamiento)</td>
+                            <td class="text-end text-nowrap">
+                                <div class="d-inline-flex gap-1">
+                                    <button type="button" class="sv-icono-btn sv-icono-editar"
+                                            onclick="location.href='@Url.Action(nameof(ConsultasController.Editar), "Consultas", new { id = consulta.Id })'"
+                                            title="Editar consulta" aria-label="Editar consulta del @consulta.Fecha.ToString("dd/MM/yyyy")">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="sv-icono-btn sv-icono-peligro"
+                                            data-eliminar
+                                            data-url="@Url.Action(nameof(ConsultasController.ConfirmarEliminar), "Consultas", new { id = consulta.Id })"
+                                            data-mensaje="Se eliminará la consulta del @consulta.Fecha.ToString("dd/MM/yyyy") (@consulta.Motivo). Esta acción no se puede deshacer."
+                                            title="Eliminar consulta" aria-label="Eliminar consulta del @consulta.Fecha.ToString("dd/MM/yyyy")">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>
+
+<div class="mt-4">
+    <a class="btn sv-btn-secundario" asp-action="Index">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8.354 1.646a.5.5 0 0 0-.708 0l-6 6a.5.5 0 0 0 0 .708l6 6a.5.5 0 0 0 .708-.708L2.707 8l7.647-7.646a.5.5 0 0 0 0-.708z"/>
+            <path d="M2.707 8H15.5a.5.5 0 0 0 0-1H2.707l7.647-7.646a.5.5 0 0 0-.708-.708l-6 6a.5.5 0 0 0 0 .708l6 6a.5.5 0 0 0 .708-.708z"/>
+        </svg>
+        Volver al catálogo
+    </a>
+</div>
+
+<partial name="_ModalEliminar" />

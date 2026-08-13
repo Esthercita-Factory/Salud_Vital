@@ -1,0 +1,30 @@
+@model Mascota
+@{
+    ViewData["Title"] = "Editar mascota";
+}
+
+<div class="sv-cabecera-ficha">
+    <div>
+        <h1 class="sv-titulo-pagina mb-1">Editar mascota</h1>
+        <p class="sv-subtitulo mb-0">Modifique los datos de @Model.Nombre.</p>
+    </div>
+    <a class="btn sv-btn-secundario" asp-action="Detalles" asp-route-id="@Model.Id">Volver a la ficha</a>
+</div>
+
+<div class="sv-ficha">
+    <form asp-action="Editar" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <partial name="_CamposMascota" model="Model" />
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn sv-btn-primario">Guardar cambios</button>
+            <a class="btn sv-btn-secundario" asp-action="Detalles" asp-route-id="@Model.Id">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

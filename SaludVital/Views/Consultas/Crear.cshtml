@@ -1,0 +1,38 @@
+@model Consulta
+@{
+    var mascota = ViewBag.Mascota as Mascota;
+    ViewData["Title"] = "Nueva consulta";
+}
+
+@if (mascota is null)
+{
+    <h1 class="text-danger">No se encontró la mascota.</h1>
+}
+else
+{
+    <div class="sv-cabecera-ficha">
+        <div>
+            <h1 class="sv-titulo-pagina mb-1">Nueva consulta</h1>
+            <p class="sv-subtitulo mb-0">Para <strong>@mascota.Nombre</strong> (@mascota.Especie @mascota.Raza).</p>
+        </div>
+        <a class="btn sv-btn-secundario" asp-controller="Mascotas" asp-action="Detalles" asp-route-id="@mascota.Id">Volver a la ficha</a>
+    </div>
+
+    <div class="sv-ficha">
+        <form asp-action="Crear" method="post">
+            <input type="hidden" asp-for="MascotaId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <partial name="_CamposConsulta" model="Model" />
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn sv-btn-primario">Registrar consulta</button>
+                <a class="btn sv-btn-secundario" asp-controller="Mascotas" asp-action="Detalles" asp-route-id="@mascota.Id">Cancelar</a>
+            </div>
+        </form>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

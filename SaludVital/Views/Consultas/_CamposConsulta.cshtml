@@ -1,0 +1,35 @@
+@model Consulta
+
+<div class="row g-3">
+    <div class="col-12 col-md-4">
+        <div class="form-group">
+            <label asp-for="Fecha" class="form-label"></label>
+            <input asp-for="Fecha" class="form-control" type="date" />
+            <span asp-validation-for="Fecha" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-8">
+        <div class="form-group">
+            <label asp-for="Motivo" class="form-label"></label>
+            <input asp-for="Motivo" class="form-control" placeholder="P. ej. chequeo anual, fiebre, vacunación" />
+            <span asp-validation-for="Motivo" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-group">
+            <label asp-for="Diagnostico" class="form-label"></label>
+            <textarea asp-for="Diagnostico" class="form-control" rows="2"></textarea>
+            <span asp-validation-for="Diagnostico" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-group">
+            <label asp-for="Tratamiento" class="form-label"></label>
+            <textarea asp-for="Tratamiento" class="form-control" rows="2"></textarea>
+            <span asp-validation-for="Tratamiento" class="text-danger"></span>
+        </div>
+    </div>
+</div>

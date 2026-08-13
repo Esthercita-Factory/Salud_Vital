@@ -1,31 +1,52 @@
-﻿using SaludVital.UI;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using SaludVital.Infra;
+using SaludVital.Repositories;
 
-string? opcion;
-do
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews(opciones =>
 {
-    ManagerUser.MostraMenu();
+    opciones.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+});
 
-    opcion = Console.ReadLine();
+builder.Services.AddRequestLocalization(opciones =>
+{
+    var esCo = new CultureInfo("es-CO");
+    opciones.DefaultRequestCulture = new RequestCulture(esCo);
+    opciones.SupportedCultures = [esCo];
+    opciones.SupportedUICultures = [esCo];
+});
 
-    switch (opcion)
-    {
-        case "1":
-            ManagerMascota.CrearUnaMascota();
-            break;
-        case "2":
-            ManagerMascota.MostrarTodasLasMascotas();
-            break;
-        case "3":
-            ManagerMascota.EditarMascota();
-            break;
-        case "4":
-            ManagerMascota.EliminarMascota();
-            break;
-        case "0":
-            Console.WriteLine("Have a good day!");
-            break;
-        default:
-            Console.WriteLine("te equivocaste de opcion");
-            break;
-    }
-} while (opcion != "0");
+builder.Services.AddSingleton<IRepositorioMascotas, RepositorioMascotasEnMemoria>();
+builder.Services.AddSingleton<IRepositorioConsultas, RepositorioConsultasEnMemoria>();
+
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+app.UseRequestLocalization();
+app.UseHttpsRedirection();
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapStaticAssets();
+
+app.MapGet("/salud", () => "Sana");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Mascotas}/{action=Index}/{id?}")
+    .WithStaticAssets();
+
+app.Run();
+
+/// <summary>Punto de entrada expuesto para las pruebas de integración.</summary>
+public partial class Program
+{
+}

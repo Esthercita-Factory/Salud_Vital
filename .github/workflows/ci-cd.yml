@@ -1,0 +1,134 @@
+name: Integración y despliegue
+
+# Este workflow no lleva escrito el nombre del proyecto en ninguna parte: la
+# imagen sale de `github.repository` y el directorio del servidor, del nombre
+# del repositorio. Se puede copiar tal cual al siguiente proyecto de la
+# organización sin tocar una línea.
+#
+# Las pruebas se ejecutan en cada pull request y en cada empujón a `main`. La
+# imagen y el despliegue sólo salen de `main`, y sólo si las pruebas pasaron.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Si empujas dos commits seguidos, cancela la ejecución anterior en vez de
+# desplegar dos veces seguidas.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------- Pruebas
+  pruebas:
+    name: Pruebas
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restaurar
+        run: dotnet restore
+
+      - name: Compilar
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Ejecutar las 70 pruebas
+        run: dotnet test --configuration Release --no-build --verbosity normal
+
+  # ------------------------------------------------------- Construir imagen
+  imagen:
+    name: Construir y publicar la imagen
+    runs-on: ubuntu-latest
+    needs: pruebas
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    # `packages: write` es lo que permite subir a GHCR. No hace falta ningún
+    # secreto: el GITHUB_TOKEN se genera solo en cada ejecución y caduca al
+    # terminarla.
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Calcular el nombre de la imagen
+        id: nombre
+        # GHCR exige minúsculas y `github.repository` conserva las mayúsculas
+        # del repositorio ("MiOrg/Libreria"), así que hay que bajarlas.
+        run: |
+          echo "imagen=ghcr.io/$(echo '${{ github.repository }}' \
+                | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Preparar buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Entrar en GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Construir y subir
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          # El servidor es un Hetzner CX/CPX, que es x86.
+          platforms: linux/amd64
+          # Dos etiquetas: `latest` para el despliegue y el hash del commit
+          # como versión fija, para poder volver atrás si algo sale mal.
+          tags: |
+            ${{ steps.nombre.outputs.imagen }}:latest
+            ${{ steps.nombre.outputs.imagen }}:${{ github.sha }}
+          # Caché entre ejecuciones: sin esto cada compilación vuelve a
+          # descargar los paquetes de NuGet desde cero.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ------------------------------------------------------------- Desplegar
+  desplegar:
+    name: Desplegar en el servidor
+    runs-on: ubuntu-latest
+    needs: imagen
+    # Interruptor: este job no se ejecuta hasta que crees la variable
+    # DEPLOY_ENABLED con el valor "true". Así el workflow no falla en rojo
+    # mientras el servidor todavía no está listo.
+    if: vars.DEPLOY_ENABLED == 'true'
+
+    # El entorno es lo que guarda la clave SSH. Si más adelante le pones
+    # revisores obligatorios (Settings → Environments → produccion), este job
+    # se quedará esperando aprobación humana antes de recibir el secreto.
+    environment: produccion
+
+    steps:
+      - name: Configurar la clave SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ vars.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Descargar la imagen nueva y reiniciar
+        # El nombre del repositorio es el nombre del directorio en /srv. Si la
+        # clave está restringida con `command=` en el servidor, este comando se
+        # ignora y llega al script por SSH_ORIGINAL_COMMAND; si no lo está, se
+        # ejecuta directamente. Funciona igual en los dos casos.
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              "${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}" \
+              "/usr/local/bin/desplegar.sh ${{ github.event.repository.name }}"
+
+      - name: Comprobar que el sitio responde
+        run: |
+          curl --fail --silent --show-error \
+               --retry 6 --retry-delay 5 --retry-all-errors \
+               "https://${{ vars.DOMAIN }}/salud"

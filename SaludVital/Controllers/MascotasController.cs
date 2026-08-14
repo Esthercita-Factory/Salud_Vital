@@ -85,7 +85,8 @@ public class MascotasController : Controller
         TempData["Mensaje"] = $"Se actualizó a {mascota.Nombre} correctamente.";
         return RedirectToAction(nameof(Detalles), new { id = mascota.Id });
     }
-
+    // Recibe el POST del modal de confirmación y borra la mascota.
+    // Solo se puede disparar con POST (no con un enlace), y exige el token anti-CSRF.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult ConfirmarEliminar(Guid id)

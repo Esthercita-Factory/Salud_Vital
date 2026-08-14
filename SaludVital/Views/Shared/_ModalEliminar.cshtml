@@ -1,5 +1,6 @@
 @* Modal de confirmación de eliminación, animado. Lo activan los botones con
-   [data-eliminar]: site.js rellena el texto, la URL y el id antes de mostrarlo. *@
+   [data-eliminar]: site.js rellena el texto y la URL antes de mostrarlo.
+   El id de la mascota/consulta viaja en la propia URL del formulario. *@
 <div class="modal fade sv-modal" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarTitulo" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -14,7 +15,6 @@
                 <button type="button" class="btn sv-btn-secundario" data-bs-dismiss="modal">Cancelar</button>
                 <form id="formEliminar" method="post" class="d-inline">
                     @Html.AntiForgeryToken()
-                    <input type="hidden" name="id" id="inputEliminarId" />
                     <button type="submit" class="btn sv-btn-peligro">Sí, eliminar</button>
                 </form>
             </div>

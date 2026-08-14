@@ -165,6 +165,40 @@ public class SaludVitalIntegracionTests : IClassFixture<SaludVitalWebApplication
         Assert.Contains("El valor debe ser un número válido.", contenido);
     }
 
+    [Fact]
+    public async Task EliminarUnaMascota_ViaElModal_LaBorraDelCatalogo()
+    {
+        var (cliente, token) = await ClienteConToken("/Mascotas/Crear");
+
+        var registro = await cliente.PostAsync("/Mascotas/Crear", FormularioDeMascota(token, new Dictionary<string, string>
+        {
+            ["Nombre"] = "PruebaEliminar",
+            ["Especie"] = "Perro",
+            ["Raza"] = "Criollo",
+            ["Sexo"] = "Macho",
+            ["EdadEnMeses"] = "12",
+            ["PesoEnKg"] = "8.5",
+            ["NombreDelDuenio"] = "Dueño de prueba",
+            ["TelefonoDelDuenio"] = "3001234567"
+        }));
+        Assert.Equal(HttpStatusCode.OK, registro.StatusCode);
+
+        var uriFicha = registro.RequestMessage!.RequestUri!;
+        Assert.Matches("/Mascotas/Detalles/[0-9a-f-]{36}$", uriFicha.ToString());
+        var id = uriFicha.Segments[^1];
+
+        var paginaFicha = await ContenidoDecodificado(await cliente.GetAsync(uriFicha));
+        var tokenFicha = Regex.Match(paginaFicha, @"name=""__RequestVerificationToken""[^>]*value=""([^""]+)""").Groups[1].Value;
+
+        var borrado = await cliente.PostAsync($"/Mascotas/ConfirmarEliminar/{id}",
+            new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>("__RequestVerificationToken", tokenFicha) }));
+
+        Assert.Equal(HttpStatusCode.OK, borrado.StatusCode);
+        var contenido = await ContenidoDecodificado(borrado);
+        Assert.Contains("La mascota se eliminó correctamente.", contenido);
+        Assert.DoesNotContain("PruebaEliminar", contenido);
+    }
+
     private async Task<(HttpClient Cliente, string Token)> ClienteConToken(string ruta)
     {
         var cliente = _fabrica.CreateClient();

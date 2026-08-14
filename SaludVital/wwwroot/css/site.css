@@ -15,12 +15,15 @@
 
 :root,
 [data-bs-theme="light"] {
+    color-scheme: light;
     --sv-acento: #d97757;
     --sv-acento-oscuro: #bf5b3b;
     --sv-acento-suave: #f9e9e2;
     --sv-acento-contraste: #ffffff;
     --sv-fondo: #faf9f5;
     --sv-tarjeta: #ffffff;
+    --sv-entrada: #fcfbf8;
+    --sv-entrada-borde: #cfc9bb;
     --sv-borde: #e9e5dc;
     --sv-borde-suave: #f0eee7;
     --sv-texto: #3e3b37;
@@ -33,17 +36,20 @@
 }
 
 [data-bs-theme="dark"] {
-    --sv-acento: #e08162;
+    color-scheme: dark;
+    --sv-acento: #e88a6c;
     --sv-acento-oscuro: #d97757;
     --sv-acento-suave: #3a2d26;
     --sv-acento-contraste: #ffffff;
-    --sv-fondo: #23231f;
-    --sv-tarjeta: #2b2b27;
-    --sv-borde: #3e3b35;
+    --sv-fondo: #1d1d1a;
+    --sv-tarjeta: #262622;
+    --sv-entrada: #1b1b18;
+    --sv-entrada-borde: #555149;
+    --sv-borde: #45423b;
     --sv-borde-suave: #33312c;
-    --sv-texto: #edebe4;
-    --sv-texto-suave: #a5a298;
-    --sv-ok: #79c08f;
+    --sv-texto: #f0eee8;
+    --sv-texto-suave: #b3afa4;
+    --sv-ok: #86c99b;
     --sv-ok-suave: #22352a;
     --sv-peligro: #f08074;
     --sv-peligro-suave: #3a2423;
@@ -464,8 +470,8 @@ a:hover {
 
 .form-control,
 .form-select {
-    background-color: var(--sv-tarjeta);
-    border-color: var(--sv-borde);
+    background-color: var(--sv-entrada);
+    border-color: var(--sv-entrada-borde);
     color: var(--sv-texto);
     border-radius: 0.625rem;
     padding: 0.5rem 0.75rem;
@@ -474,15 +480,35 @@ a:hover {
 
 .form-control:focus,
 .form-select:focus {
-    background-color: var(--sv-tarjeta);
+    background-color: var(--sv-entrada);
     color: var(--sv-texto);
     border-color: var(--sv-acento);
-    box-shadow: 0 0 0 0.2rem rgba(217, 119, 87, 0.18);
+    box-shadow: 0 0 0 0.2rem rgba(217, 119, 87, 0.25);
 }
 
 .form-control::placeholder {
     color: var(--sv-texto-suave);
-    opacity: 0.8;
+    opacity: 1;
+}
+
+/* Autofill coherente con el tema (Chrome/Edge/Safari) */
+.form-control:-webkit-autofill,
+.form-control:-webkit-autofill:hover,
+.form-control:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--sv-texto);
+    -webkit-box-shadow: 0 0 0 1000px var(--sv-entrada) inset;
+    caret-color: var(--sv-texto);
+    transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Iconos nativos de fecha/número según el tema */
+.form-control[type="date"]::-webkit-calendar-picker-indicator {
+    filter: var(--sv-icono-filtro, none);
+    cursor: pointer;
+}
+
+[data-bs-theme="dark"] {
+    --sv-icono-filtro: invert(0.85);
 }
 
 .form-check-input:checked {
@@ -492,7 +518,12 @@ a:hover {
 
 .form-check-input:focus {
     border-color: var(--sv-acento);
-    box-shadow: 0 0 0 0.2rem rgba(217, 119, 87, 0.18);
+    box-shadow: 0 0 0 0.2rem rgba(217, 119, 87, 0.25);
+}
+
+.form-check-input:disabled,
+.form-check-input:disabled ~ .form-check-label {
+    opacity: 0.5;
 }
 
 /* ---------- Alertas ---------- */

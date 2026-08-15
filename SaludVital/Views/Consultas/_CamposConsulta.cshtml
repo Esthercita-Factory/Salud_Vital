@@ -12,7 +12,7 @@
     <div class="col-12 col-md-8">
         <div class="form-group">
             <label asp-for="Motivo" class="form-label"></label>
-            <input asp-for="Motivo" class="form-control" placeholder="P. ej. chequeo anual, fiebre, vacunación" />
+            <input asp-for="Motivo" class="form-control" placeholder="Ej.: chequeo anual, fiebre, vacunación" />
             <span asp-validation-for="Motivo" class="text-danger"></span>
         </div>
     </div>
@@ -20,7 +20,7 @@
     <div class="col-12">
         <div class="form-group">
             <label asp-for="Diagnostico" class="form-label"></label>
-            <textarea asp-for="Diagnostico" class="form-control" rows="2"></textarea>
+            <textarea asp-for="Diagnostico" class="form-control" rows="2" placeholder="Ej.: sin hallazgos relevantes, vacuna al día"></textarea>
             <span asp-validation-for="Diagnostico" class="text-danger"></span>
         </div>
     </div>
@@ -28,7 +28,7 @@
     <div class="col-12">
         <div class="form-group">
             <label asp-for="Tratamiento" class="form-label"></label>
-            <textarea asp-for="Tratamiento" class="form-control" rows="2"></textarea>
+            <textarea asp-for="Tratamiento" class="form-control" rows="2" placeholder="Ej.: desparasitación mensual, antibiótico por 5 días"></textarea>
             <span asp-validation-for="Tratamiento" class="text-danger"></span>
         </div>
     </div>

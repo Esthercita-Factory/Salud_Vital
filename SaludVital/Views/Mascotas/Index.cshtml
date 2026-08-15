@@ -44,11 +44,13 @@ else
     <div class="row g-3">
         @foreach (var mascota in Model)
         {
-            <div class="col-12 col-sm-6 col-lg-4">
+            <div class="col-6 col-sm-6 col-lg-4">
                 <div class="sv-tarjeta-mascota">
                     <div class="sv-tarjeta-cabeza">
                         <div class="d-flex align-items-center gap-2 min-w-0">
-                            <span class="sv-avatar" aria-hidden="true">@mascota.Nombre.Substring(0, 1)</span>
+                            <span class="sv-avatar" aria-hidden="true">
+                                <partial name="_IconoEspecie" model="mascota.Especie" />
+                            </span>
                             <div class="min-w-0">
                                 <h3 class="sv-tarjeta-nombre mb-0 text-truncate" title="@mascota.Nombre">@mascota.Nombre</h3>
                                 <span class="sv-tarjeta-sub text-truncate d-block" title="@mascota.Especie">@mascota.Especie</span>

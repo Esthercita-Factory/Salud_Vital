@@ -70,13 +70,13 @@ public class RepositorioMascotasEnMemoria : IRepositorioMascotas
         [
             NuevaMascota("Firulais", "Perro", "Criollo", Sexo.Macho, 36, 18.5m, "Carlos Gómez", "3001234567", "Vacunas al día"),
             NuevaMascota("Luna", "Perro", "Labrador", Sexo.Hembra, 18, 24.0m, "María Pérez", "3107654321", "En control de peso"),
-            NuevaMascota("Rocky", "Perro", "Bulldog Francés", Sexo.Macho, 42, 12.0m, "Jorge Ruiz", "3209876543", "Alergia estacional"),
+            NuevaMascota("Rocky", "Conejo", "Mini Lop", Sexo.Macho, 14, 1.9m, "Jorge Ruiz", "3209876543", "Le encanta la zanahoria"),
             NuevaMascota("Michi", "Gato", "Siamés", Sexo.Hembra, 24, 4.5m, "Laura Torres", "3012345678", "Esterilizada"),
-            NuevaMascota("Toby", "Perro", "Beagle", Sexo.Macho, 60, 14.2m, "Andrés Díaz", "3112233445", "Requiere paseos diarios"),
-            NuevaMascota("Nala", "Perro", "Golden Retriever", Sexo.Hembra, 12, 26.0m, "Sofía Castro", "3154455667", "Cachorra muy activa"),
+            NuevaMascota("Toby", "Conejo", "Holandés", Sexo.Macho, 20, 2.3m, "Andrés Díaz", "3112233445", "Necesita espacio para saltar"),
+            NuevaMascota("Nala", "Loro", "Cacatúa ninfa", Sexo.Hembra, 16, 0.35m, "Sofía Castro", "3154455667", "Repite sonidos y silbidos"),
             NuevaMascota("Simba", "Gato", "Persa", Sexo.Macho, 30, 5.1m, "Ricardo Mora", "3129988776", "Cepillado frecuente"),
             NuevaMascota("Max", "Perro", "Pastor Alemán", Sexo.Macho, 54, 34.5m, "Diana Herrera", "3162211998", "Entrenamiento en curso"),
-            NuevaMascota("Kira", "Perro", "Husky Siberiano", Sexo.Hembra, 27, 21.8m, "Fernando Vega", "3187766554", "No convive con gatos"),
+            NuevaMascota("Kira", "Loro", "Cotorra argentina", Sexo.Hembra, 30, 0.28m, "Fernando Vega", "3187766554", "Pico muy curioso"),
             NuevaMascota("Pelusa", "Gato", "Angora", Sexo.Hembra, 9, 3.2m, "Paula Ríos", "3134455887", "Alimentación especial")
         ];
     }

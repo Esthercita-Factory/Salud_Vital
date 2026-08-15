@@ -967,49 +967,12 @@ header {
     max-width: 30ch;
 }
 
-.sv-huellas {
-    position: relative;
+.sv-panel-gif {
     width: 100%;
     max-width: 280px;
-    height: 230px;
+    border-radius: var(--sv-radio-suave);
+    box-shadow: var(--sv-sombra-media);
     margin-top: 0.75rem;
-}
-
-.sv-pata {
-    position: absolute;
-    display: inline-flex;
-    color: var(--sv-acento);
-    opacity: 0;
-    animation: sv-pata-flotar 4.5s ease-in-out infinite;
-}
-
-.sv-pata svg {
-    width: 100%;
-    height: 100%;
-}
-
-.sv-pata-1 { left: 6%;  top: 72%; width: 44px; height: 44px; animation-delay: 0s; }
-.sv-pata-2 { left: 62%; top: 62%; width: 34px; height: 34px; animation-delay: 1.1s; }
-.sv-pata-3 { left: 30%; top: 60%; width: 52px; height: 52px; animation-delay: 2s; }
-.sv-pata-4 { left: 78%; top: 74%; width: 30px; height: 30px; animation-delay: 0.5s; }
-.sv-pata-5 { left: 16%; top: 38%; width: 38px; height: 38px; animation-delay: 2.7s; }
-.sv-pata-6 { left: 55%; top: 26%; width: 44px; height: 44px; animation-delay: 1.6s; }
-
-@keyframes sv-pata-flotar {
-    0% {
-        opacity: 0;
-        transform: translateY(26px) rotate(-8deg) scale(0.7);
-    }
-    25% {
-        opacity: 0.85;
-    }
-    60% {
-        opacity: 0.55;
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(-96px) rotate(8deg) scale(1.05);
-    }
 }
 
 /* Panel de consulta con burbuja estilo chat */

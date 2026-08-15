@@ -1,0 +1,12 @@
+services:
+  saludvital-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: saludvital_app
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+    restart: unless-stopped

@@ -1,8 +1,0 @@
-# Igual que compose.yaml, pero ejecutando las pruebas dentro de la etapa
-# `pruebas` del Dockerfile. Útil para verificar en un entorno limpio.
-services:
-  pruebas:
-    build:
-      context: .
-      target: pruebas
-    container_name: saludvital-pruebas

@@ -1,0 +1,49 @@
+@model SaludVital.Models.Mascota
+
+@{
+    ViewData["Title"] = $"Eliminar - {Model.Nombre}";
+}
+
+<div class="sv-page-header">
+    <h1 class="sv-title text-danger">🗑️ Eliminar a @Model.Nombre</h1>
+    <a asp-action="Detalles" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger sv-card-eliminar">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Confirmar eliminación</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">¿Estás seguro de que quieres eliminar a <strong>@Model.Nombre</strong>?</p>
+                
+                <div class="alert alert-warning">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Esta acción no se puede deshacer.</strong> Se perderán todos los datos de esta mascota permanentemente.
+                </div>
+
+                <dl class="row">
+                    <dt class="col-sm-3">Raza</dt>
+                    <dd class="col-sm-9">@Model.Raza</dd>
+                    <dt class="col-sm-3">Edad</dt>
+                    <dd class="col-sm-9">@Model.EdadEnMeses meses</dd>
+                </dl>
+
+                <form asp-action="ConfirmarEliminar" method="post" class="mt-4">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-action="Detalles" asp-route-id="@Model.Id" class="btn btn-secondary">
+                            <i class="bi bi-x-lg"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Sí, eliminar definitivamente
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

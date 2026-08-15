@@ -90,7 +90,7 @@ jobs:
             ${{ steps.nombre.outputs.imagen }}:latest
             ${{ steps.nombre.outputs.imagen }}:${{ github.sha }}
           # Caché entre ejecuciones: sin esto cada compilación vuelve a
-          # descargar los paquetes de NuGet desde cero.
+          # descargar los paquetes de NuGet desde ceroooo.
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

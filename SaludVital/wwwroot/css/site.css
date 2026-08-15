@@ -1,59 +1,62 @@
 /* ============================================================
-   SaludVital — interfaz inspirada en Claude
-   Acento coral (#D97757), serif para títulos, sans para texto.
+   SaludVital — tema azul
+   Acento azul (#2563eb), blanco en claro y azul oscuro en dark.
+   Fuente Dosis (Google Fonts).
    ============================================================ */
 
 :root {
-    --sv-fuente-texto: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --sv-fuente-titulo: "Source Serif 4", Georgia, Cambria, "Times New Roman", serif;
+    --sv-fuente-texto: "Dosis", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --sv-fuente-titulo: "Dosis", Georgia, Cambria, "Times New Roman", serif;
     --sv-radio: 0.875rem;
     --sv-radio-suave: 0.625rem;
-    --sv-sombra-suave: 0 1px 2px rgba(20, 20, 18, 0.05), 0 4px 12px rgba(20, 20, 18, 0.06);
-    --sv-sombra-media: 0 8px 24px rgba(20, 20, 18, 0.12);
+    --sv-sombra-suave: 0 1px 2px rgba(15, 23, 42, 0.05), 0 4px 12px rgba(15, 23, 42, 0.06);
+    --sv-sombra-media: 0 8px 24px rgba(15, 23, 42, 0.12);
     --sv-transicion: 160ms cubic-bezier(0.25, 0.8, 0.35, 1);
 }
 
 :root,
 [data-bs-theme="light"] {
     color-scheme: light;
-    --sv-acento: #d97757;
-    --sv-acento-oscuro: #bf5b3b;
-    --sv-acento-suave: #f9e9e2;
+    --sv-acento: #2563eb;
+    --sv-acento-oscuro: #1d4ed8;
+    --sv-acento-suave: #e8effc;
     --sv-acento-contraste: #ffffff;
-    --sv-fondo: #faf9f5;
+    --sv-fondo: #ffffff;
     --sv-tarjeta: #ffffff;
-    --sv-entrada: #fcfbf8;
-    --sv-entrada-borde: #cfc9bb;
-    --sv-borde: #e9e5dc;
-    --sv-borde-suave: #f0eee7;
-    --sv-texto: #3e3b37;
-    --sv-texto-suave: #847f76;
+    --sv-entrada: #ffffff;
+    --sv-entrada-borde: #c7d2e0;
+    --sv-borde: #e2e8f0;
+    --sv-borde-suave: #eef2f7;
+    --sv-texto: #1e293b;
+    --sv-texto-suave: #64748b;
     --sv-ok: #3f7d55;
     --sv-ok-suave: #e7f2ea;
     --sv-peligro: #c74438;
     --sv-peligro-suave: #fbeae7;
-    --sv-marca-suave: #f4f1ea;
+    --sv-marca-suave: #eef2f9;
+    --sv-navbar-fondo: rgba(255, 255, 255, 0.72);
 }
 
 [data-bs-theme="dark"] {
     color-scheme: dark;
-    --sv-acento: #e88a6c;
-    --sv-acento-oscuro: #d97757;
-    --sv-acento-suave: #3a2d26;
+    --sv-acento: #7db4ff;
+    --sv-acento-oscuro: #2563eb;
+    --sv-acento-suave: #1c2f4f;
     --sv-acento-contraste: #ffffff;
-    --sv-fondo: #1d1d1a;
-    --sv-tarjeta: #262622;
-    --sv-entrada: #1b1b18;
-    --sv-entrada-borde: #555149;
-    --sv-borde: #45423b;
-    --sv-borde-suave: #33312c;
-    --sv-texto: #f0eee8;
-    --sv-texto-suave: #b3afa4;
+    --sv-fondo: #0f172a;
+    --sv-tarjeta: #1e293b;
+    --sv-entrada: #0b1220;
+    --sv-entrada-borde: #334155;
+    --sv-borde: #334155;
+    --sv-borde-suave: #273449;
+    --sv-texto: #e2e8f0;
+    --sv-texto-suave: #94a3b8;
     --sv-ok: #86c99b;
     --sv-ok-suave: #22352a;
     --sv-peligro: #f08074;
     --sv-peligro-suave: #3a2423;
-    --sv-marca-suave: #2f2d29;
+    --sv-marca-suave: #16233c;
+    --sv-navbar-fondo: rgba(15, 23, 42, 0.66);
 }
 
 html {
@@ -91,11 +94,20 @@ a:hover {
 
 /* ---------- Cabecera ---------- */
 
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}
+
 .sv-navbar {
-    background-color: var(--sv-fondo);
+    background-color: var(--sv-navbar-fondo);
+    -webkit-backdrop-filter: blur(14px) saturate(1.5);
+    backdrop-filter: blur(14px) saturate(1.5);
     border-bottom: 1px solid var(--sv-borde) !important;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
 }
 
 .sv-marca {
@@ -120,13 +132,8 @@ a:hover {
     width: 30px;
     height: 30px;
     border-radius: 9px;
-    background: linear-gradient(135deg, var(--sv-acento) 0%, var(--sv-acento-oscuro) 100%);
-    color: #fff;
-    font-family: var(--sv-fuente-texto);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    box-shadow: 0 2px 6px rgba(217, 119, 87, 0.35);
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
 }
 
 .sv-enlace-nav {
@@ -181,16 +188,16 @@ a:hover {
     --bs-btn-active-color: var(--sv-acento-contraste);
     --bs-btn-active-bg: var(--sv-acento-oscuro);
     --bs-btn-active-border-color: var(--sv-acento-oscuro);
-    --bs-btn-focus-shadow-rgb: 217, 119, 87;
+    --bs-btn-focus-shadow-rgb: 37, 99, 235;
     border-radius: 0.625rem;
     font-weight: 600;
-    box-shadow: 0 1px 2px rgba(20, 20, 18, 0.08);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
     transition: all var(--sv-transicion);
 }
 
 .sv-btn-primario:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(217, 119, 87, 0.3);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .sv-btn-secundario {
@@ -233,10 +240,10 @@ a:hover {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: transparent;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--sv-borde);
+    background-color: var(--sv-tarjeta);
     color: var(--sv-texto-suave);
     border-radius: 0.5rem;
     padding: 0;
@@ -247,21 +254,25 @@ a:hover {
 .sv-icono-btn:hover {
     background-color: var(--sv-marca-suave);
     color: var(--sv-texto);
+    border-color: var(--sv-entrada-borde);
 }
 
 .sv-icono-ver:hover {
     color: var(--sv-acento);
     background-color: var(--sv-acento-suave);
+    border-color: var(--sv-acento);
 }
 
 .sv-icono-editar:hover {
     color: var(--sv-acento);
     background-color: var(--sv-acento-suave);
+    border-color: var(--sv-acento);
 }
 
 .sv-icono-peligro:hover {
     color: var(--sv-peligro);
     background-color: var(--sv-peligro-suave);
+    border-color: var(--sv-peligro);
 }
 
 /* ---------- Títulos de página ---------- */
@@ -280,10 +291,12 @@ a:hover {
 /* ---------- Tarjetas del catálogo ---------- */
 
 .sv-tarjeta-mascota {
+    position: relative;
+    overflow: hidden;
     background-color: var(--sv-tarjeta);
     border: 1px solid var(--sv-borde);
     border-radius: var(--sv-radio);
-    padding: 1.1rem 1.25rem;
+    padding: 1.25rem 1.35rem;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -292,24 +305,63 @@ a:hover {
     animation: aparecer 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.sv-tarjeta-mascota::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--sv-acento) 0%, var(--sv-acento-oscuro) 100%);
+    opacity: 0;
+    transition: opacity var(--sv-transicion);
+}
+
 .sv-tarjeta-mascota:hover {
     transform: translateY(-4px);
-    box-shadow: var(--sv-sombra-media);
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.14), var(--sv-sombra-media);
     border-color: var(--sv-acento);
+}
+
+.sv-tarjeta-mascota:hover::before {
+    opacity: 1;
+}
+
+.sv-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--sv-acento) 0%, var(--sv-acento-oscuro) 100%);
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.28);
 }
 
 .sv-tarjeta-cabeza {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
-    margin-bottom: 0.9rem;
+    gap: 0.75rem;
+    margin-bottom: 1.1rem;
 }
 
 .sv-tarjeta-nombre {
     font-size: 1.25rem;
     font-weight: 600;
     margin: 0;
+}
+
+.sv-tarjeta-sub {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--sv-texto-suave);
+    line-height: 1.3;
 }
 
 .sv-estado {
@@ -362,9 +414,28 @@ a:hover {
 .sv-tarjeta-pie {
     margin-top: auto;
     display: flex;
+    align-items: center;
     gap: 0.25rem;
     border-top: 1px solid var(--sv-borde-suave);
     padding-top: 0.75rem;
+}
+
+.sv-enlace-tarjeta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--sv-acento);
+    text-decoration: none;
+    padding: 0.35rem 0.65rem;
+    border-radius: 0.5rem;
+    transition: color var(--sv-transicion), background-color var(--sv-transicion);
+}
+
+.sv-enlace-tarjeta:hover {
+    color: var(--sv-acento-oscuro);
+    background-color: var(--sv-acento-suave);
 }
 
 /* ---------- Ficha / Detalles ---------- */
@@ -380,12 +451,24 @@ a:hover {
 }
 
 .sv-ficha {
+    position: relative;
+    overflow: hidden;
     background-color: var(--sv-tarjeta);
     border: 1px solid var(--sv-borde);
     border-radius: var(--sv-radio);
     box-shadow: var(--sv-sombra-suave);
     padding: 1.5rem;
     animation: aparecer 450ms cubic-bezier(0.22, 1, 0.36, 1) 60ms both;
+}
+
+.sv-ficha::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--sv-acento) 0%, var(--sv-acento-oscuro) 100%);
 }
 
 .sv-seccion-titulo {
@@ -483,7 +566,7 @@ a:hover {
     background-color: var(--sv-entrada);
     color: var(--sv-texto);
     border-color: var(--sv-acento);
-    box-shadow: 0 0 0 0.2rem rgba(217, 119, 87, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
 }
 
 .form-control::placeholder {
@@ -518,7 +601,7 @@ a:hover {
 
 .form-check-input:focus {
     border-color: var(--sv-acento);
-    box-shadow: 0 0 0 0.2rem rgba(217, 119, 87, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
 }
 
 .form-check-input:disabled,

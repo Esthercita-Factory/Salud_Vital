@@ -240,8 +240,8 @@ header {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     border: 1px solid var(--sv-borde);
     background-color: var(--sv-tarjeta);
     color: var(--sv-texto-suave);
@@ -331,15 +331,18 @@ header {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
     flex-shrink: 0;
+    border-radius: 50%;
+    background-color: #ffffff;
     color: var(--sv-acento);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
 }
 
 .sv-avatar svg {
-    width: 30px;
-    height: 30px;
+    width: 22px;
+    height: 22px;
 }
 
 .sv-tarjeta-cabeza {
@@ -347,7 +350,10 @@ header {
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    margin-bottom: 1.1rem;
+    margin-bottom: 1rem;
+    background-color: var(--sv-acento-suave);
+    border-radius: var(--sv-radio-suave);
+    padding: 0.75rem 0.85rem;
 }
 
 .sv-tarjeta-nombre {
@@ -367,13 +373,15 @@ header {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 700;
     color: var(--sv-ok);
     background-color: var(--sv-ok-suave);
-    padding: 0.2rem 0.6rem;
+    padding: 0.3rem 0.7rem;
     border-radius: 999px;
     white-space: nowrap;
+    border: 1px solid transparent;
+    flex-shrink: 0;
 }
 
 .sv-estado::before {
@@ -392,22 +400,79 @@ header {
 .sv-tarjeta-datos {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem 1rem;
-    margin: 0 0 1rem;
+    gap: 0.5rem;
+    margin: 0 0 0.5rem;
+}
+
+.sv-tarjeta-datos > div {
+    background-color: var(--sv-marca-suave);
+    border-radius: 8px;
+    padding: 0.55rem 0.7rem;
+    min-width: 0;
 }
 
 .sv-tarjeta-datos dt {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--sv-texto-suave);
+    margin-bottom: 0.1rem;
 }
 
 .sv-tarjeta-datos dd {
     margin: 0;
     font-size: 0.9rem;
     color: var(--sv-texto);
+}
+
+.sv-tarjeta-dueno {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background-color: var(--sv-marca-suave);
+    border-radius: 8px;
+    padding: 0.55rem 0.7rem;
+    margin-bottom: 1rem;
+    min-width: 0;
+}
+
+.sv-tarjeta-dueno .min-w-0 {
+    min-width: 0;
+    flex: 1;
+}
+
+.sv-tarjeta-etiqueta {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sv-texto-suave);
+    line-height: 1.2;
+}
+
+.sv-tarjeta-dueno-nombre {
+    font-size: 0.9rem;
+    color: var(--sv-texto);
+    line-height: 1.3;
+}
+
+.sv-dueno-icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--sv-acento-suave);
+    color: var(--sv-acento);
+    flex-shrink: 0;
+}
+
+.sv-dueno-icono svg {
+    width: 13px;
+    height: 13px;
 }
 
 .sv-tarjeta-pie {
@@ -435,6 +500,67 @@ header {
 .sv-enlace-tarjeta:hover {
     color: var(--sv-acento-oscuro);
     background-color: var(--sv-acento-suave);
+}
+
+@media (max-width: 575.98px) {
+    .sv-tarjeta-mascota {
+        padding: 1rem;
+    }
+
+    .sv-tarjeta-cabeza {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.65rem 0.7rem;
+    }
+
+    .sv-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .sv-avatar svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .sv-estado {
+        font-size: 0.68rem;
+        padding: 0.25rem 0.55rem;
+    }
+
+    .sv-tarjeta-datos > div,
+    .sv-tarjeta-dueno {
+        padding: 0.5rem 0.6rem;
+    }
+}
+
+/* ---------- Modo oscuro: tarjetas de mascotas ---------- */
+[data-bs-theme="dark"] .sv-tarjeta-mascota {
+    background-color: #161d2b;
+}
+
+[data-bs-theme="dark"] .sv-tarjeta-cabeza {
+    background-color: #22304d;
+    border-bottom: 1px solid var(--sv-borde);
+}
+
+[data-bs-theme="dark"] .sv-estado {
+    background-color: #1e3d2c;
+    color: #a3e6bd;
+    border-radius: 20px;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid rgba(163, 230, 189, 0.18);
+}
+
+[data-bs-theme="dark"] .sv-estado.inactivo {
+    background-color: #2a3344;
+    color: #cbd5e1;
+    border: 1px solid rgba(203, 213, 225, 0.16);
+}
+
+[data-bs-theme="dark"] .sv-icono-btn {
+    background-color: #1e2740;
+    color: var(--sv-texto-suave);
 }
 
 /* ---------- Ficha / Detalles ---------- */

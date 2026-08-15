@@ -62,7 +62,7 @@ jobs:
       - name: Calcular el nombre de la imagen
         id: nombre
         # GHCR exige minúsculas y `github.repository` conserva las mayúsculas
-        # del repositorio ("MiOrg/Libreria"), así que hay que bajarlas.
+        # del repositorio ("MiOrg/Libreria"), así que hay que bajarlasss.
         run: |
           echo "imagen=ghcr.io/$(echo '${{ github.repository }}' \
                 | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"

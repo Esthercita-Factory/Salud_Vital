@@ -33,14 +33,14 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Restaurar 
-        run: dotnet restore SaludVital.sln
+      - name: Restaurar
+        run: dotnet restore SaludVital.slnx
 
       - name: Compilar
-        run: dotnet build SaludVital.sln --configuration Release --no-restore
+        run: dotnet build SaludVital.slnx --configuration Release --no-restore
 
       - name: Ejecutar las pruebas
-        run: dotnet test SaludVital.sln --configuration Release --no-build --verbosity normal
+        run: dotnet test SaludVital.slnx --configuration Release --no-build --verbosity normal
 
   # ------------------------------------------------------- Construir imagen
   imagen:

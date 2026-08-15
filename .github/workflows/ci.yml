@@ -33,14 +33,14 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Restaurar
-        run: dotnet restore
+      - name: Restaurar 
+        run: dotnet restore SaludVital.sln
 
       - name: Compilar
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build SaludVital.sln --configuration Release --no-restore
 
-      - name: Ejecutar las 70 pruebas
-        run: dotnet test --configuration Release --no-build --verbosity normal
+      - name: Ejecutar las pruebas
+        run: dotnet test SaludVital.sln --configuration Release --no-build --verbosity normal
 
   # ------------------------------------------------------- Construir imagen
   imagen:
@@ -118,14 +118,14 @@ jobs:
           ssh-keyscan -H "${{ vars.SSH_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Descargar la imagen nueva y reiniciar
-        # El nombre del repositorio es el nombre del directorio en /srv. Si la
-        # clave está restringida con `command=` en el servidor, este comando se
-        # ignora y llega al script por SSH_ORIGINAL_COMMAND; si no lo está, se
-        # ejecuta directamente. Funciona igual en los dos casos.
         run: |
+          TARGET_APP="${{ vars.PROJECT_NAME }}"
+          if [ -z "$TARGET_APP" ]; then
+            TARGET_APP="${{ github.event.repository.name }}"
+          fi
           ssh -i ~/.ssh/id_ed25519 \
               "${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}" \
-              "/usr/local/bin/desplegar.sh ${{ github.event.repository.name }}"
+              "/usr/local/bin/desplegar.sh $TARGET_APP"
 
       - name: Comprobar que el sitio responde
         run: |

@@ -11,18 +11,29 @@
     <a class="btn sv-btn-secundario" asp-action="Detalles" asp-route-id="@Model.Id">Volver a la ficha</a>
 </div>
 
-<div class="sv-ficha">
-    <form asp-action="Editar" method="post">
-        <input type="hidden" asp-for="Id" />
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-        <partial name="_CamposMascota" model="Model" />
-
-        <div class="mt-4 d-flex gap-2">
-            <button type="submit" class="btn sv-btn-primario">Guardar cambios</button>
-            <a class="btn sv-btn-secundario" asp-action="Detalles" asp-route-id="@Model.Id">Cancelar</a>
+<div class="row g-4 align-items-start">
+    <div class="col-12 col-lg-5 order-first order-lg-last">
+        <div class="sv-panel-huellas" aria-hidden="true">
+            <p class="sv-panel-titulo">Actualiza a @Model.Nombre</p>
+            <p class="sv-panel-subtitulo">Revisa los datos del paciente y guarda los cambios cuando termines.</p>
+            <img class="sv-panel-gif" src="~/images/cats-optimized.gif" alt="Gatos saludando" />
         </div>
-    </form>
+    </div>
+    <div class="col-12 col-lg-7">
+        <div class="sv-ficha">
+            <form asp-action="Editar" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <partial name="_CamposMascota" model="Model" />
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn sv-btn-primario">Guardar cambios</button>
+                    <a class="btn sv-btn-secundario" asp-action="Detalles" asp-route-id="@Model.Id">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

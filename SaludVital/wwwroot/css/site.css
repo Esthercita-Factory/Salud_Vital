@@ -356,6 +356,50 @@ header {
     padding: 0.75rem 0.85rem;
 }
 
+.sv-tarjeta-cabeza.sv-cabeza-img {
+    background-size: cover;
+    background-position: center;
+    min-height: 108px;
+    align-items: flex-end;
+    padding: 1rem;
+    border-radius: var(--sv-radio-suave);
+}
+
+.sv-cabeza-perro {
+    background-image: linear-gradient(rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.78) 100%), url('/images/perro.jpg');
+}
+
+.sv-cabeza-gato {
+    background-image: linear-gradient(rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.78) 100%), url('/images/gato.jpeg');
+}
+
+.sv-banner-ficha {
+    display: flex;
+    align-items: flex-end;
+    min-height: 180px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    background-color: var(--sv-acento-suave);
+    background-size: cover;
+    background-position: center 30%;
+    border-radius: var(--sv-radio);
+    box-shadow: var(--sv-sombra-suave);
+    position: relative;
+    overflow: hidden;
+}
+
+.sv-cabeza-img .sv-tarjeta-nombre {
+    color: #ffffff;
+}
+
+.sv-cabeza-img .sv-tarjeta-sub {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.sv-cabeza-img .sv-estado {
+    border: none;
+}
+
 .sv-tarjeta-nombre {
     font-size: 1.25rem;
     font-weight: 600;

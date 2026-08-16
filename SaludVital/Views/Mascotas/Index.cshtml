@@ -3,7 +3,6 @@
     ViewData["Title"] = "Mascotas";
     var busqueda = ViewBag.Busqueda as string;
 }
-
 <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
     <div>
         <h1 class="sv-titulo-pagina mb-1">Mascotas</h1>
@@ -46,7 +45,16 @@ else
         {
             <div class="col-6 col-sm-6 col-lg-4">
                 <div class="sv-tarjeta-mascota">
-                    <div class="sv-tarjeta-cabeza">
+@{
+    var especie = (mascota.Especie ?? "").ToLowerInvariant();
+    var claseCabeza = especie switch
+    {
+        "perro" => "sv-cabeza-img sv-cabeza-perro",
+        "gato" => "sv-cabeza-img sv-cabeza-gato",
+        _ => ""
+    };
+}
+                    <div class="sv-tarjeta-cabeza @claseCabeza">
                         <div class="d-flex align-items-center gap-2 min-w-0">
                             <span class="sv-avatar" aria-hidden="true">
                                 <partial name="_IconoEspecie" model="mascota.Especie" />

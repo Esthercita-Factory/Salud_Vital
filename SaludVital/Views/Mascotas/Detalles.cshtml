@@ -1,6 +1,18 @@
 @model Mascota
 @{
     ViewData["Title"] = $"Ficha de {Model.Nombre}";
+    var especie = (Model.Especie ?? "").ToLowerInvariant();
+    var claseBanner = especie switch
+    {
+        "perro" => "sv-cabeza-perro",
+        "gato" => "sv-cabeza-gato",
+        _ => ""
+    };
+}
+
+@if (!string.IsNullOrEmpty(claseBanner))
+{
+    <div class="sv-banner-ficha @claseBanner" role="img" aria-label="Foto de @Model.Nombre"></div>
 }
 
 <div class="sv-cabecera-ficha">

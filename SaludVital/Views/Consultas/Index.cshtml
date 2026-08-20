@@ -1,0 +1,55 @@
+@model List<ConsultaDashboardItem>
+@{
+    ViewData["Title"] = "Consultas";
+}
+
+<div class="sv-cabecera-ficha">
+    <div>
+        <h1 class="sv-titulo-pagina mb-1">Consultas</h1>
+        <p class="sv-subtitulo mb-0">Historial completo de consultas de la clínica.</p>
+    </div>
+    <a class="btn sv-btn-secundario" asp-controller="Mascotas" asp-action="Index">Ver mascotas</a>
+</div>
+
+<section class="sv-ficha">
+    @if (Model.Count == 0)
+    {
+        <div class="sv-consultas-vacio">
+            <span class="sv-consultas-vacio-icono" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                </svg>
+            </span>
+            <strong>Sin consultas registradas</strong>
+            <span>Las nuevas consultas aparecerán aquí.</span>
+        </div>
+    }
+    else
+    {
+        <div class="sv-consulta-lista">
+            @foreach (var item in Model)
+            {
+                var estadoClase = item.Consulta.Estado switch
+                {
+                    EstadoConsulta.Completada => "completada",
+                    EstadoConsulta.Cancelada => "cancelada",
+                    _ => "pendiente"
+                };
+                <a class="sv-consulta-dashboard" asp-controller="Mascotas" asp-action="Detalles" asp-route-id="@item.Mascota.Id" title="Ver ficha de @item.Mascota.Nombre">
+                    <span class="sv-consulta-dashboard-avatar" aria-hidden="true">
+                        <partial name="~/Views/Mascotas/_IconoEspecie.cshtml" model="item.Mascota.Especie" />
+                    </span>
+                    <span class="sv-consulta-dashboard-info">
+                        <span class="sv-consulta-dashboard-topline">
+                            <strong>@item.Mascota.Nombre</strong>
+                            <span class="sv-consulta-dashboard-estado @estadoClase">@item.Consulta.Estado</span>
+                        </span>
+                        <span class="sv-consulta-dashboard-duenio">@item.Mascota.NombreDelDuenio</span>
+                        <span class="sv-consulta-dashboard-motivo">@item.Consulta.Motivo</span>
+                    </span>
+                    <time class="sv-consulta-dashboard-fecha" datetime="@item.Consulta.Fecha.ToString("yyyy-MM-dd")">@item.Consulta.Fecha.ToString("dd/MM/yyyy")</time>
+                </a>
+            }
+        </div>
+    }
+</section>

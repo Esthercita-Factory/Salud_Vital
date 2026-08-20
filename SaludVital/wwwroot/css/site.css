@@ -1430,18 +1430,23 @@ header {
 
 .sv-speedometer {
     position: relative;
-    flex: 0 0 250px;
-    width: 250px;
-    height: 155px;
-    overflow: hidden;
+    --sv-gauge-size: 250px;
+    --sv-gauge-height: 155px;
+    --sv-gauge-pivot: calc(var(--sv-gauge-size) / 2);
+    --sv-hub-size: 19px;
+    --sv-hub-radius: 9.5px;
+    flex: 0 0 var(--sv-gauge-size);
+    width: var(--sv-gauge-size);
+    height: var(--sv-gauge-height);
+    overflow: visible;
 }
 
 .sv-speedometer-arc {
     position: absolute;
     top: 0;
     left: 0;
-    width: 250px;
-    height: 250px;
+    width: var(--sv-gauge-size);
+    height: var(--sv-gauge-size);
     border-radius: 50%;
     background: conic-gradient(from 270deg, var(--sv-acento) 0deg var(--sv-speed), var(--sv-marca-suave) var(--sv-speed) 180deg, transparent 180deg);
     -webkit-mask: radial-gradient(circle, transparent 0 67%, #000 68% 100%);
@@ -1454,7 +1459,7 @@ header {
 .sv-speedometer-needle {
     position: absolute;
     left: 50%;
-    bottom: 8px;
+    bottom: calc(var(--sv-gauge-height) - var(--sv-gauge-pivot));
     width: 4px;
     height: 94px;
     border-radius: 999px;
@@ -1468,9 +1473,9 @@ header {
 .sv-speedometer-hub {
     position: absolute;
     left: 50%;
-    bottom: 4px;
-    width: 19px;
-    height: 19px;
+    bottom: calc(var(--sv-gauge-height) - var(--sv-gauge-pivot) - var(--sv-hub-radius));
+    width: var(--sv-hub-size);
+    height: var(--sv-hub-size);
     border: 4px solid var(--sv-tarjeta);
     border-radius: 50%;
     background: var(--sv-peligro);
@@ -1479,7 +1484,7 @@ header {
 
 .sv-speedometer-value {
     position: absolute;
-    bottom: 18px;
+    bottom: -8px;
     left: 50%;
     color: var(--sv-texto);
     font-size: 1.5rem;
@@ -1601,31 +1606,34 @@ header {
     }
 
     .sv-speedometer {
-        flex: 0 0 124px;
-        width: 200px;
-        height: 124px;
+        --sv-gauge-size: 200px;
+        --sv-gauge-height: 124px;
+        --sv-gauge-pivot: calc(var(--sv-gauge-size) / 2);
+        --sv-hub-size: 16px;
+        --sv-hub-radius: 8px;
+        flex: 0 0 var(--sv-gauge-height);
+        width: var(--sv-gauge-size);
+        height: var(--sv-gauge-height);
         margin: 0 auto 0.25rem;
         transform: none;
     }
 
     .sv-speedometer-arc {
-        width: 200px;
-        height: 200px;
+        width: var(--sv-gauge-size);
+        height: var(--sv-gauge-size);
     }
 
     .sv-speedometer-needle {
-        bottom: 6px;
         height: 75px;
     }
 
     .sv-speedometer-hub {
-        bottom: 3px;
-        width: 16px;
-        height: 16px;
+        width: var(--sv-hub-size);
+        height: var(--sv-hub-size);
     }
 
     .sv-speedometer-value {
-        bottom: 14px;
+        bottom: -8px;
         font-size: 1.25rem;
     }
 }

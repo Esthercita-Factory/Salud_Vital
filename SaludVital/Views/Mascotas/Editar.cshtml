@@ -11,12 +11,14 @@
     <a class="btn sv-btn-secundario" asp-action="Detalles" asp-route-id="@Model.Id">Volver a la ficha</a>
 </div>
 
-<div class="row g-4 align-items-start">
+<div class="row g-4 align-items-stretch">
     <div class="col-12 col-lg-5 order-first order-lg-last">
-        <div class="sv-panel-huellas" aria-hidden="true">
-            <p class="sv-panel-titulo">Actualiza a @Model.Nombre</p>
-            <p class="sv-panel-subtitulo">Revisa los datos del paciente y guarda los cambios cuando termines.</p>
-            <img class="sv-panel-gif" src="~/images/Veterinaria-4.png" alt="Veterinaria" />
+        <div class="sv-panel-huellas sv-panel-foto" aria-hidden="true">
+            <img class="sv-panel-foto-img" src="~/images/Veterinaria-4.png" alt="Veterinaria" />
+            <div class="sv-panel-foto-overlay">
+                <p class="sv-panel-titulo sv-frase-escritura">Actualiza a @Model.Nombre</p>
+                <p class="sv-panel-subtitulo">Revisa los datos del paciente y guarda los cambios cuando termines.</p>
+            </div>
         </div>
     </div>
     <div class="col-12 col-lg-7">

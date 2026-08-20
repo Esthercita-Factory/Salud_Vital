@@ -142,10 +142,21 @@
                             </button>
                         </div>
                     </header>
+                    <p class="sv-consulta-resumen">
+                        <strong>Motivo:</strong> @consulta.Motivo
+                        <span>|</span>
+                        <strong>Síntomas:</strong> @(string.IsNullOrWhiteSpace(consulta.Sintomas) ? "Sin síntomas registrados" : consulta.Sintomas)
+                        <span>|</span>
+                        <strong>Diagnóstico:</strong> @(string.IsNullOrWhiteSpace(consulta.Diagnostico) ? "Sin diagnóstico registrado" : consulta.Diagnostico)
+                    </p>
                     <dl class="sv-consulta-datos">
                         <div>
                             <dt>Motivo</dt>
                             <dd>@consulta.Motivo</dd>
+                        </div>
+                        <div>
+                            <dt>Síntomas</dt>
+                            <dd>@(string.IsNullOrWhiteSpace(consulta.Sintomas) ? "—" : consulta.Sintomas)</dd>
                         </div>
                         <div>
                             <dt>Diagnóstico</dt>
@@ -166,7 +177,7 @@
         <figure class="sv-doctor-panel" role="img" aria-label="Veterinario de SaludVital">
             <img src="~/images/doctor.jpg" alt="Veterinario de SaludVital" />
             <figcaption class="sv-doctor-leyenda">
-                <span class="sv-doctor-frase">Cuidar a tu mascota es cuidar una parte de tu familia.</span>
+                <span class="sv-doctor-frase sv-frase-escritura">Cuidar a tu mascota es cuidar una parte de tu familia.</span>
                 <span class="sv-doctor-parrafo">En SaludVital nos ocupamos de la salud y la felicidad de tu compañero de vida.</span>
                 <a class="btn sv-btn-primario sv-doctor-boton" asp-controller="Mascotas" asp-action="Crear">Registrar mascota</a>
             </figcaption>

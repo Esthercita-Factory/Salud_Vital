@@ -17,6 +17,17 @@ public class ConsultasController : Controller
         _repositorioMascotas = repositorioMascotas;
     }
 
+    public IActionResult Index()
+    {
+        var consultas = _repositorioMascotas
+            .ObtenerTodas()
+            .SelectMany(m => m.Consultas.Select(c => new ConsultaDashboardItem { Consulta = c, Mascota = m }))
+            .OrderByDescending(item => item.Consulta.Fecha)
+            .ToList();
+
+        return View(consultas);
+    }
+
     // GET: muestra el formulario de una consulta nueva para una mascota concreta.
     // El id de la mascota llega por la URL (asp-route-mascotaId) y se guarda en un campo oculto.
     public IActionResult Crear(Guid mascotaId)

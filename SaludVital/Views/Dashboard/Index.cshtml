@@ -4,8 +4,23 @@
     var mascotasActivas = (int)ViewBag.MascotasActivas;
     var mascotasInactivas = (int)ViewBag.MascotasInactivas;
     var totalConsultas = (int)ViewBag.TotalConsultas;
-    var consultasRecientes = (List<Consulta>)ViewBag.ConsultasRecientes;
+    var consultasRecientes = (List<ConsultaDashboardItem>)ViewBag.ConsultasRecientes;
+    var hayMasConsultas = (bool)ViewBag.HayMasConsultas;
     var porEspecie = (Dictionary<string, int>)ViewBag.PorEspecie;
+    var porcentajeActivas = totalMascotas == 0 ? 0 : (int)Math.Round(mascotasActivas * 100.0 / totalMascotas);
+    var gradosActivas = porcentajeActivas * 1.8;
+    var porcentajeConsultas = Math.Min(totalConsultas * 10, 100);
+    var gradosConsultas = porcentajeConsultas * 1.8;
+
+    string FechaRelativa(DateTime fecha)
+    {
+        var diferencia = DateTime.Now - fecha;
+        if (diferencia.TotalMinutes < 1) return "Ahora";
+        if (diferencia.TotalHours < 1) return $"Hace {(int)diferencia.TotalMinutes} min";
+        if (diferencia.TotalHours < 24) return $"Hace {(int)diferencia.TotalHours} h";
+        if (diferencia.TotalDays < 7) return $"Hace {(int)diferencia.TotalDays} días";
+        return fecha.ToString("dd/MM/yyyy");
+    }
 }
 
 <div class="sv-cabecera-ficha">
@@ -15,7 +30,46 @@
     </div>
 </div>
 
-<div class="row g-3 mb-4">
+<div class="sv-dashboard-velocimetros mb-4">
+    <div class="sv-speedometer-card">
+        <div class="sv-speedometer" style="--sv-speed: @($"{gradosActivas.ToString(System.Globalization.CultureInfo.InvariantCulture)}deg");">
+            <div class="sv-speedometer-arc"></div>
+            <div class="sv-speedometer-needle"></div>
+            <div class="sv-speedometer-hub"></div>
+            <div class="sv-speedometer-value">@porcentajeActivas<span>%</span></div>
+        </div>
+        <div class="sv-speedometer-copy">
+            <span class="sv-speedometer-kicker">Estado general</span>
+            <h2>Pacientes activos</h2>
+            <p>@mascotasActivas de @totalMascotas mascotas están activas.</p>
+        </div>
+    </div>
+    <div class="sv-dashboard-gauge-grid">
+        <div class="sv-dashboard-mini-gauge">
+            <div class="sv-mini-gauge" style="--sv-speed: @($"{gradosConsultas.ToString(System.Globalization.CultureInfo.InvariantCulture)}deg");">
+                <div class="sv-mini-gauge-fill"></div>
+                <strong>@totalConsultas</strong>
+            </div>
+            <span>Consultas</span>
+        </div>
+        <div class="sv-dashboard-mini-gauge">
+            <div class="sv-mini-gauge" style="--sv-speed: @($"{(mascotasInactivas > 0 ? 90 : 0)}deg");">
+                <div class="sv-mini-gauge-fill sv-mini-gauge-warning"></div>
+                <strong>@mascotasInactivas</strong>
+            </div>
+            <span>Inactivas</span>
+        </div>
+        <div class="sv-dashboard-mini-gauge">
+            <div class="sv-mini-gauge" style="--sv-speed: @($"{(porEspecie.Count > 0 ? 180 : 0)}deg");">
+                <div class="sv-mini-gauge-fill sv-mini-gauge-complete"></div>
+                <strong>@porEspecie.Count</strong>
+            </div>
+            <span>Especies</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4 sv-dashboard-stat-row">
     <div class="col-6 col-lg-3">
         <div class="sv-stat-card">
             <span class="sv-stat-icono" style="background-color: rgba(37, 99, 235, 0.1); color: #2563eb;">
@@ -102,21 +156,51 @@
             <h2 class="sv-seccion-titulo">Consultas recientes</h2>
             @if (consultasRecientes.Count == 0)
             {
-                <p class="sv-subtitulo mb-0">No hay consultas registradas aún.</p>
+                <div class="sv-consultas-vacio">
+                    <span class="sv-consultas-vacio-icono" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                        </svg>
+                    </span>
+                    <strong>Sin consultas recientes</strong>
+                    <span>Las nuevas consultas aparecerán aquí.</span>
+                </div>
             }
             else
             {
                 <div class="sv-consulta-lista">
-                    @foreach (var c in consultasRecientes)
+                    @foreach (var item in consultasRecientes)
                     {
-                        <div class="sv-consulta-mini">
-                            <span class="sv-consulta-mini-fecha">@c.Fecha.ToString("dd/MM/yyyy")</span>
-                            <div class="min-w-0">
-                                <p class="sv-consulta-mini-motivo mb-0 text-truncate">@c.Motivo</p>
-                            </div>
-                        </div>
+                        var consulta = item.Consulta;
+                        var estadoClase = consulta.Estado switch
+                        {
+                            EstadoConsulta.Completada => "completada",
+                            EstadoConsulta.Cancelada => "cancelada",
+                            _ => "pendiente"
+                        };
+                        <a class="sv-consulta-dashboard" asp-controller="Mascotas" asp-action="Detalles" asp-route-id="@item.Mascota.Id" title="Ver ficha de @item.Mascota.Nombre">
+                            <span class="sv-consulta-dashboard-avatar" aria-hidden="true">
+                                <partial name="~/Views/Mascotas/_IconoEspecie.cshtml" model="item.Mascota.Especie" />
+                            </span>
+                            <span class="sv-consulta-dashboard-info">
+                                <span class="sv-consulta-dashboard-topline">
+                                    <strong>@item.Mascota.Nombre</strong>
+                                    <span class="sv-consulta-dashboard-estado @estadoClase">@consulta.Estado</span>
+                                </span>
+                                <span class="sv-consulta-dashboard-duenio">@item.Mascota.NombreDelDuenio</span>
+                                <span class="sv-consulta-dashboard-motivo">@consulta.Motivo</span>
+                            </span>
+                            <time class="sv-consulta-dashboard-fecha" datetime="@consulta.Fecha.ToString("yyyy-MM-dd")" title="@consulta.Fecha.ToString("dd/MM/yyyy")">@FechaRelativa(consulta.Fecha)</time>
+                        </a>
                     }
                 </div>
+                @if (hayMasConsultas)
+                {
+                    <a class="sv-consulta-ver-todas" asp-controller="Consultas" asp-action="Index">
+                        Ver todas
+                        <span aria-hidden="true">→</span>
+                    </a>
+                }
             }
         </div>
     </div>

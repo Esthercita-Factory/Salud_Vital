@@ -1,4 +1,10 @@
 @model Consulta
+@{
+    var mascota = ViewBag.Mascota as Mascota;
+    var especie = (mascota?.Especie ?? "perro").Trim().ToLowerInvariant();
+    var sintomasIniciales = (Model.Sintomas ?? string.Empty)
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+}
 
 <div class="row g-3">
     <div class="col-12 col-md-4">
@@ -14,6 +20,28 @@
             <label asp-for="Motivo" class="form-label"></label>
             <input asp-for="Motivo" class="form-control" placeholder="Ej.: chequeo anual, fiebre, vacunación" />
             <span asp-validation-for="Motivo" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+        <div class="form-group">
+            <label asp-for="Estado" class="form-label"></label>
+            <select asp-for="Estado" class="form-select" asp-items="Html.GetEnumSelectList<EstadoConsulta>()"></select>
+            <span asp-validation-for="Estado" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-group sv-sintomas" data-especie="@especie">
+            <label class="form-label" for="sintoma-otro">Síntomas</label>
+            <p class="sv-sintomas-ayuda">Selecciona los síntomas observados en la mascota.</p>
+            <div class="sv-sintomas-grupos" data-sintomas-lista></div>
+            <div class="sv-sintoma-otro">
+                <input id="sintoma-otro" class="form-control" type="text" placeholder="Otro síntoma" maxlength="80" data-sintoma-otro />
+                <button type="button" class="btn sv-btn-secundario" data-agregar-sintoma>Agregar</button>
+            </div>
+            <input asp-for="Sintomas" type="hidden" data-sintomas-input />
+            <span asp-validation-for="Sintomas" class="text-danger"></span>
         </div>
     </div>
 
@@ -33,3 +61,102 @@
         </div>
     </div>
 </div>
+
+<script>
+    (() => {
+        const campo = document.querySelector('[data-sintomas][data-especie]');
+        if (!campo || campo.dataset.inicializado === 'true') return;
+
+        campo.dataset.inicializado = 'true';
+        const lista = campo.querySelector('[data-sintomas-lista]');
+        const input = campo.querySelector('[data-sintomas-input]');
+        const otro = campo.querySelector('[data-sintoma-otro]');
+        const agregar = campo.querySelector('[data-agregar-sintoma]');
+        const iniciales = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(sintomasIniciales));
+        const seleccionados = new Set(iniciales);
+        const especie = campo.dataset.especie;
+        const sintomasPorEspecie = {
+            perro: {
+                "Digestivo": ["Vómito", "Diarrea", "Falta de apetito"],
+                "Respiratorio": ["Tos", "Estornudos", "Dificultad para respirar"],
+                "Piel": ["Picazón", "Caída de pelo", "Enrojecimiento"],
+                "Comportamiento": ["Letargo", "Agresividad", "Ansiedad"]
+            },
+            gato: {
+                "Digestivo": ["Vómito", "Diarrea", "Falta de apetito"],
+                "Respiratorio": ["Estornudos", "Secreción nasal"],
+                "Piel": ["Picazón", "Pérdida de pelo", "Costras"],
+                "Comportamiento": ["Esconderse", "Maullidos excesivos", "Letargo"]
+            }
+        };
+        const grupos = sintomasPorEspecie[especie] ?? sintomasPorEspecie.perro;
+
+        function sincronizar() {
+            input.value = [...seleccionados].join(', ');
+        }
+
+        function dibujar() {
+            lista.replaceChildren();
+            Object.entries(grupos).forEach(([categoria, sintomas]) => {
+                const grupo = document.createElement('div');
+                grupo.className = 'sv-sintomas-grupo';
+                grupo.innerHTML = `<p class="sv-sintomas-categoria">${categoria}</p>`;
+                const chips = document.createElement('div');
+                chips.className = 'sv-sintomas-chips';
+
+                sintomas.forEach((sintoma) => {
+                    const chip = document.createElement('button');
+                    chip.type = 'button';
+                    chip.className = 'sv-sintoma-chip';
+                    chip.textContent = sintoma;
+                    chip.dataset.sintoma = sintoma;
+                    chip.setAttribute('aria-pressed', seleccionados.has(sintoma));
+                    chip.classList.toggle('seleccionado', seleccionados.has(sintoma));
+                    chip.addEventListener('click', () => {
+                        seleccionados.has(sintoma) ? seleccionados.delete(sintoma) : seleccionados.add(sintoma);
+                        dibujar();
+                        sincronizar();
+                    });
+                    chips.appendChild(chip);
+                });
+
+                grupo.appendChild(chips);
+                lista.appendChild(grupo);
+            });
+
+            seleccionados.forEach((sintoma) => {
+                if (Object.values(grupos).flat().includes(sintoma)) return;
+                const chip = document.createElement('button');
+                chip.type = 'button';
+                chip.className = 'sv-sintoma-chip seleccionado personalizado';
+                chip.textContent = `${sintoma} ×`;
+                chip.addEventListener('click', () => {
+                    seleccionados.delete(sintoma);
+                    dibujar();
+                    sincronizar();
+                });
+                lista.lastElementChild?.querySelector('.sv-sintomas-chips')?.appendChild(chip);
+            });
+        }
+
+        agregar.addEventListener('click', () => {
+            const sintoma = otro.value.trim();
+            if (!sintoma) return;
+            seleccionados.add(sintoma);
+            otro.value = '';
+            dibujar();
+            sincronizar();
+            otro.focus();
+        });
+
+        otro.addEventListener('keydown', (evento) => {
+            if (evento.key === 'Enter') {
+                evento.preventDefault();
+                agregar.click();
+            }
+        });
+
+        dibujar();
+        sincronizar();
+    })();
+</script>

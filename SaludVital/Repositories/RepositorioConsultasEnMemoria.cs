@@ -44,6 +44,7 @@ public class RepositorioConsultasEnMemoria : IRepositorioConsultas
         }
 
         existente.Fecha = consulta.Fecha;
+        existente.Estado = consulta.Estado;
         existente.Motivo = consulta.Motivo;
         existente.Diagnostico = consulta.Diagnostico;
         existente.Tratamiento = consulta.Tratamiento;

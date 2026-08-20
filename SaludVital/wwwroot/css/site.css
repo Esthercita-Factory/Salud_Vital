@@ -1226,33 +1226,12 @@ header {
     border-top: 8px solid var(--sv-entrada);
 }
 
-.sv-doctor {
-    width: 100%;
-    max-width: 230px;
-    animation: sv-doctor-flotar 4s ease-in-out infinite;
-}
-
-.sv-doctor svg {
+.sv-panel-icono {
     display: block;
     width: 100%;
+    max-width: 230px;
     height: auto;
-}
-
-.sv-doctor-mano {
-    transform-origin: 132px 128px;
-    animation: sv-saludar 1.8s ease-in-out infinite;
-}
-
-@keyframes sv-saludar {
-    0%, 100% { transform: rotate(18deg); }
-    25% { transform: rotate(50deg); }
-    50% { transform: rotate(14deg); }
-    75% { transform: rotate(46deg); }
-}
-
-@keyframes sv-doctor-flotar {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+    margin: 0 auto 1rem;
 }
 
 /* ---------- Animaciones ---------- */

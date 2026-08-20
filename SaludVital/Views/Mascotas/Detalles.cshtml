@@ -16,24 +16,25 @@
     <div class="col-12 col-lg-7">
         @if (!string.IsNullOrEmpty(claseBanner))
         {
-            <div class="sv-banner-ficha @claseBanner" role="img" aria-label="Foto de @Model.Nombre"></div>
+            <div class="sv-banner-ficha @claseBanner">
+                <div class="sv-banner-overlay">
+                    <div class="sv-banner-texto">
+                        <h1 class="sv-banner-nombre mb-1">@Model.Nombre</h1>
+                        <p class="sv-banner-sub mb-0">@Model.Especie · @Model.Raza · @(Model.Sexo == Sexo.Macho ? "Macho" : "Hembra")</p>
+                    </div>
+                    <div class="sv-banner-acciones d-flex gap-2 flex-wrap">
+                        <a class="btn sv-btn-primario sv-btn-sm" asp-controller="Consultas" asp-action="Crear" asp-route-mascotaId="@Model.Id">Nueva consulta</a>
+                        <a class="btn sv-btn-secundario sv-btn-sm" asp-action="Editar" asp-route-id="@Model.Id">Editar</a>
+                        <button type="button" class="btn sv-btn-peligro sv-btn-sm"
+                                data-eliminar
+                                data-url="@Url.Action(nameof(MascotasController.ConfirmarEliminar), "Mascotas", new { id = Model.Id })"
+                                data-mensaje="Se eliminará a @Model.Nombre junto con sus @(Model.Consultas.Count) consulta(s). Esta acción no se puede deshacer.">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
         }
-        <div class="sv-cabecera-ficha">
-    <div>
-        <h1 class="sv-titulo-pagina mb-1">@Model.Nombre</h1>
-        <p class="sv-subtitulo mb-0">@Model.Especie · @Model.Raza · @(Model.Sexo == Sexo.Macho ? "Macho" : "Hembra")</p>
-    </div>
-    <div class="d-flex gap-2 flex-wrap">
-        <a class="btn sv-btn-primario" asp-controller="Consultas" asp-action="Crear" asp-route-mascotaId="@Model.Id">Nueva consulta</a>
-        <a class="btn sv-btn-secundario" asp-action="Editar" asp-route-id="@Model.Id">Editar</a>
-        <button type="button" class="btn sv-btn-peligro"
-                data-eliminar
-                data-url="@Url.Action(nameof(MascotasController.ConfirmarEliminar), "Mascotas", new { id = Model.Id })"
-                data-mensaje="Se eliminará a @Model.Nombre junto con sus @(Model.Consultas.Count) consulta(s). Esta acción no se puede deshacer.">
-            Eliminar
-        </button>
-    </div>
-</div>
 
 <section class="sv-ficha mb-4">
     <h2 class="sv-seccion-titulo">Datos generales</h2>

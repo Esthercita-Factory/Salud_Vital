@@ -390,18 +390,43 @@ header {
 }
 
 .sv-banner-ficha {
-    display: flex;
-    align-items: flex-end;
-    min-height: 180px;
-    padding: 1.25rem;
+    position: relative;
+    min-height: 200px;
     margin-bottom: 1.5rem;
     background-color: var(--sv-acento-suave);
     background-size: cover;
     background-position: center 30%;
     border-radius: var(--sv-radio);
     box-shadow: var(--sv-sombra-suave);
-    position: relative;
     overflow: hidden;
+}
+
+.sv-banner-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.3) 50%, rgba(15, 23, 42, 0) 100%);
+}
+
+.sv-banner-nombre {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.sv-banner-sub {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.sv-banner-acciones .btn {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.85rem;
 }
 
 .sv-cabeza-img .sv-tarjeta-nombre {
@@ -1083,11 +1108,196 @@ header {
     animation: aparecer 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* ---------- Sidebar (solo desktop) ---------- */
+
+.sv-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 230px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--sv-tarjeta);
+    border-right: 1px solid var(--sv-borde);
+    z-index: 1040;
+    padding: 1.25rem 0.75rem;
+}
+
+.sv-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--sv-texto);
+    text-decoration: none;
+    padding: 0 0.5rem 1rem;
+    border-bottom: 1px solid var(--sv-borde);
+    margin-bottom: 0.75rem;
+}
+
+.sv-sidebar-brand .sv-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
+}
+
+.sv-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.sv-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--sv-texto-suave);
+    text-decoration: none;
+    border-radius: var(--sv-radio-suave);
+    transition: color var(--sv-transicion), background-color var(--sv-transicion);
+}
+
+.sv-sidebar-link:hover {
+    color: var(--sv-texto);
+    background-color: var(--sv-marca-suave);
+}
+
+.sv-sidebar-link.activo {
+    color: var(--sv-acento);
+    background-color: rgba(37, 99, 235, 0.08);
+    font-weight: 600;
+}
+
+.sv-sidebar-footer {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--sv-borde);
+}
+
+.sv-main-content {
+    margin-left: 230px;
+}
+
+@media (max-width: 991.98px) {
+    .sv-main-content {
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 992px) {
+    .sv-footer {
+        position: static;
+    }
+}
+
+/* ---------- Dashboard ---------- */
+
+.sv-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    background-color: var(--sv-tarjeta);
+    border: 1px solid var(--sv-borde);
+    border-radius: var(--sv-radio-suave);
+    box-shadow: var(--sv-sombra-suave);
+    padding: 1rem 1.1rem;
+}
+
+.sv-stat-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--sv-radio-suave);
+    flex-shrink: 0;
+}
+
+.sv-stat-numero {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+    color: var(--sv-texto);
+}
+
+.sv-stat-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0;
+    color: var(--sv-texto-suave);
+}
+
+.sv-species-item {
+    margin-bottom: 0.75rem;
+}
+
+.sv-species-item:last-child {
+    margin-bottom: 0;
+}
+
+.sv-species-nombre {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--sv-texto);
+}
+
+.sv-species-cantidad {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--sv-acento);
+}
+
+.sv-species-barra {
+    width: 100%;
+    height: 8px;
+    background-color: var(--sv-marca-suave);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.sv-species-fill {
+    height: 100%;
+    background-color: var(--sv-acento);
+    border-radius: 999px;
+    transition: width 600ms ease;
+}
+
+.sv-consulta-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--sv-borde-suave);
+}
+
+.sv-consulta-mini:last-child {
+    border-bottom: none;
+}
+
+.sv-consulta-mini-fecha {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--sv-acento);
+    white-space: nowrap;
+}
+
+.sv-consulta-mini-motivo {
+    font-size: 0.88rem;
+    color: var(--sv-texto);
+}
+
 /* ---------- Pie de página ---------- */
 
 .sv-footer {
-    position: absolute;
-    bottom: 0;
     width: 100%;
     line-height: 48px;
     font-size: 0.82rem;

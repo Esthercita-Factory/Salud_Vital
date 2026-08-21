@@ -19,15 +19,18 @@ public class MascotasController : Controller
     // GET: lista completa del catálogo; búsqueda y filtros se aplican en el encabezado.
     public IActionResult Index(string? busqueda)
     {
-        var mascotas = _repositorioMascotas.ObtenerTodas();
+        var todasLasMascotas = _repositorioMascotas.ObtenerTodas();
+        var mascotas = string.IsNullOrWhiteSpace(busqueda)
+            ? todasLasMascotas
+            : _repositorioMascotas.ObtenerTodas(busqueda);
         ViewBag.Busqueda = busqueda;
-        ViewBag.TotalMascotas = mascotas.Count;
-        ViewBag.MascotasActivas = mascotas.Count(m => m.EstaActivo);
-        ViewBag.TotalEspecies = mascotas
+        ViewBag.TotalMascotas = todasLasMascotas.Count;
+        ViewBag.MascotasActivas = todasLasMascotas.Count(m => m.EstaActivo);
+        ViewBag.TotalEspecies = todasLasMascotas
             .Select(m => m.Especie)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .Count();
-        ViewBag.EspeciesDisponibles = mascotas
+        ViewBag.EspeciesDisponibles = todasLasMascotas
             .Select(m => m.Especie.Trim())
             .Where(e => e.Length > 0)
             .Distinct(StringComparer.OrdinalIgnoreCase)

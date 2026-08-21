@@ -16,12 +16,23 @@ public class MascotasController : Controller
         _repositorioMascotas = repositorioMascotas;
     }
 
-    // GET: lista de mascotas, con filtro opcional por nombre.
-    // El texto de búsqueda viaja en ViewBag para rellenar la caja de texto al repintar.
+    // GET: lista completa del catálogo; búsqueda y filtros se aplican en el encabezado.
     public IActionResult Index(string? busqueda)
     {
-        var mascotas = _repositorioMascotas.ObtenerTodas(busqueda);
+        var mascotas = _repositorioMascotas.ObtenerTodas();
         ViewBag.Busqueda = busqueda;
+        ViewBag.TotalMascotas = mascotas.Count;
+        ViewBag.MascotasActivas = mascotas.Count(m => m.EstaActivo);
+        ViewBag.TotalEspecies = mascotas
+            .Select(m => m.Especie)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Count();
+        ViewBag.EspeciesDisponibles = mascotas
+            .Select(m => m.Especie.Trim())
+            .Where(e => e.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(e => e)
+            .ToList();
         return View(mascotas);
     }
 
@@ -40,6 +51,7 @@ public class MascotasController : Controller
     // GET: muestra el formulario en blanco para registrar una mascota.
     public IActionResult Crear()
     {
+        CargarEstadisticasPanel();
         return View();
     }
 
@@ -54,6 +66,7 @@ public class MascotasController : Controller
         // con los errores ya cargados en ModelState.
         if (!ModelState.IsValid)
         {
+            CargarEstadisticasPanel();
             return View(mascota);
         }
 
@@ -79,6 +92,7 @@ public class MascotasController : Controller
             return NotFound();
         }
 
+        CargarEstadisticasPanel();
         return View(mascota);
     }
 
@@ -95,6 +109,7 @@ public class MascotasController : Controller
 
         if (!ModelState.IsValid)
         {
+            CargarEstadisticasPanel();
             return View(mascota);
         }
 
@@ -118,5 +133,16 @@ public class MascotasController : Controller
 
         TempData["Mensaje"] = "La mascota se eliminó correctamente.";
         return RedirectToAction(nameof(Index));
+    }
+
+    private void CargarEstadisticasPanel()
+    {
+        var mascotas = _repositorioMascotas.ObtenerTodas();
+
+        ViewBag.TotalMascotas = mascotas.Count;
+        ViewBag.TotalEspecies = mascotas.Select(m => m.Especie).Distinct(StringComparer.OrdinalIgnoreCase).Count();
+        ViewBag.ConsultasEnEspera = mascotas
+            .SelectMany(m => m.Consultas)
+            .Count(c => c.Estado == EstadoConsulta.Pendiente);
     }
 }

@@ -12,34 +12,39 @@
     };
 }
 
-<div class="row g-4 align-items-stretch">
-    <div class="col-12 col-lg-7">
-        @if (!string.IsNullOrEmpty(claseBanner))
-        {
-            <div class="sv-banner-ficha @claseBanner">
+<div class="sv-detalles">
+    <div class="sv-detalles-layout">
+        <div class="sv-detalles-main">
+            <div class="sv-header-card sv-banner-ficha @claseBanner">
                 <div class="sv-banner-overlay">
                     <div class="sv-banner-texto">
                         <h1 class="sv-banner-nombre mb-1">@Model.Nombre</h1>
                         <p class="sv-banner-sub mb-0">@Model.Especie · @Model.Raza · @(Model.Sexo == Sexo.Macho ? "Macho" : "Hembra")</p>
                     </div>
                     <div class="sv-banner-acciones d-flex gap-2 flex-wrap">
-                        <a class="btn sv-btn-primario sv-btn-sm" asp-controller="Consultas" asp-action="Crear" asp-route-mascotaId="@Model.Id">Nueva consulta</a>
-                        <a class="btn sv-btn-secundario sv-btn-sm" asp-action="Editar" asp-route-id="@Model.Id">Editar</a>
-                        <button type="button" class="btn sv-btn-peligro sv-btn-sm"
+                        <a class="btn sv-header-action sv-header-action-primary" asp-controller="Consultas" asp-action="Crear" asp-route-mascotaId="@Model.Id">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+                            Nueva consulta
+                        </a>
+                        <a class="btn sv-header-action sv-header-action-edit" asp-action="Editar" asp-route-id="@Model.Id">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z" /></svg>
+                            Editar
+                        </a>
+                        <button type="button" class="btn sv-header-action sv-header-action-delete"
                                 data-eliminar
                                 data-url="@Url.Action(nameof(MascotasController.ConfirmarEliminar), "Mascotas", new { id = Model.Id })"
                                 data-mensaje="Se eliminará a @Model.Nombre junto con sus @(Model.Consultas.Count) consulta(s). Esta acción no se puede deshacer.">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 11v6M14 11v6" /></svg>
                             Eliminar
                         </button>
                     </div>
                 </div>
             </div>
-        }
 
-<section class="sv-ficha mb-4">
+<section class="sv-card sv-info-card mb-4">
     <h2 class="sv-seccion-titulo">Datos generales</h2>
-    <dl class="sv-ficha-datos">
-        <div>
+    <dl class="sv-info-grid">
+        <div class="sv-info-tile">
             <dt>
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                     <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.366.366 0 0 0 .101.025.366.366 0 0 0 .101-.025c.075-.023.173-.061.293-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
@@ -47,9 +52,14 @@
                 </svg>
                 Estado
             </dt>
-            <dd><span class="sv-estado @(Model.EstaActivo ? "" : "inactivo")">@(Model.EstaActivo ? "Activo" : "Inactivo")</span></dd>
+            <dd>
+                <span class="sv-status-pill @(Model.EstaActivo ? "" : "inactivo")">
+                    <span class="dot" aria-hidden="true"></span>
+                    @(Model.EstaActivo ? "Activo" : "Inactivo")
+                </span>
+            </dd>
         </div>
-        <div>
+        <div class="sv-info-tile">
             <dt>
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                     <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/>
@@ -59,7 +69,7 @@
             </dt>
             <dd>@Model.EdadEnMeses meses</dd>
         </div>
-        <div>
+        <div class="sv-info-tile">
             <dt>
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                     <path d="M4 11H2v3h2zm5-4H7v7h2zm5-5v12h-2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM6 7a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V8a1 1 0 0 1 1-1zm-4 4a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1z"/>
@@ -68,7 +78,7 @@
             </dt>
             <dd>@Model.PesoEnKg.ToString("0.##") kg</dd>
         </div>
-        <div>
+        <div class="sv-info-tile">
             <dt>
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                     <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664h10z"/>
@@ -77,7 +87,7 @@
             </dt>
             <dd>@Model.NombreDelDuenio</dd>
         </div>
-        <div>
+        <div class="sv-info-tile">
             <dt>
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                     <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5z"/>
@@ -87,7 +97,7 @@
             </dt>
             <dd>@Model.TelefonoDelDuenio</dd>
         </div>
-        <div>
+        <div class="sv-info-tile">
             <dt>
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                     <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
@@ -100,13 +110,24 @@
     </dl>
 </section>
 
-<section class="sv-ficha">
+<section class="sv-card sv-history-card">
     <h2 class="sv-seccion-titulo">Historial de consultas (@Model.Consultas.Count)</h2>
 
     @if (Model.Consultas.Count == 0)
     {
-        <p class="sv-subtitulo mb-2">Esta mascota aún no tiene consultas registradas.</p>
-        <a class="btn sv-btn-secundario" asp-controller="Consultas" asp-action="Crear" asp-route-mascotaId="@Model.Id">Registrar la primera</a>
+        <div class="sv-empty-state">
+            <span class="sv-empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+                    <path d="m8 12 2.5 2.5L16 9" />
+                </svg>
+            </span>
+            <p>Esta mascota aún no tiene consultas registradas.</p>
+            <a class="sv-empty-action" asp-controller="Consultas" asp-action="Crear" asp-route-mascotaId="@Model.Id">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+                Registrar la primera
+            </a>
+        </div>
     }
     else
     {
@@ -171,17 +192,23 @@
             }
         </div>
     }
-</section>
-    </div>
-    <div class="col-12 col-lg-5">
-        <figure class="sv-doctor-panel" role="img" aria-label="Veterinario de SaludVital">
-            <img src="~/images/doctor.jpg" alt="Veterinario de SaludVital" />
-            <figcaption class="sv-doctor-leyenda">
-                <span class="sv-doctor-frase sv-frase-escritura">Cuidar a tu mascota es cuidar una parte de tu familia.</span>
-                <span class="sv-doctor-parrafo">En SaludVital nos ocupamos de la salud y la felicidad de tu compañero de vida.</span>
-                <a class="btn sv-btn-primario sv-doctor-boton" asp-controller="Mascotas" asp-action="Crear">Registrar mascota</a>
-            </figcaption>
-        </figure>
+            </section>
+        </div>
+
+        <aside class="sv-side-ficha" aria-label="Información de SaludVital">
+            <div class="sv-side-ficha-media">
+                <img src="~/images/doctor.jpg" alt="Veterinario de SaludVital" />
+            </div>
+            <div class="sv-side-ficha-copy">
+                <div class="sv-side-ficha-kicker">SALUDVITAL</div>
+                <h2>Cuidar a tu mascota es cuidar una parte de tu familia.</h2>
+                <p>En SaludVital nos ocupamos de la salud y la felicidad de tu compañero de vida.</p>
+                <a class="sv-side-ficha-cta" asp-controller="Mascotas" asp-action="Crear">
+                    Registrar mascota
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                </a>
+            </div>
+        </aside>
     </div>
 </div>
 

@@ -2,34 +2,71 @@
 @{
     ViewData["Title"] = "Mascotas";
     var busqueda = ViewBag.Busqueda as string;
+    var totalMascotas = (int?)ViewBag.TotalMascotas ?? 0;
+    var mascotasActivas = (int?)ViewBag.MascotasActivas ?? 0;
+    var totalEspecies = (int?)ViewBag.TotalEspecies ?? 0;
+    var especiesDisponibles = ViewBag.EspeciesDisponibles as List<string> ?? [];
 }
-<div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
-    <div>
-        <h1 class="sv-titulo-pagina mb-1">Mascotas</h1>
-        <p class="sv-subtitulo mb-0">Pacientes registrados en Patitas Felices.</p>
-    </div>
-    <a class="btn sv-btn-primario" asp-action="Crear">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-        </svg>
-        Nueva mascota
-    </a>
-</div>
 
-<form method="get" action="@Url.Action(nameof(MascotasController.Index), "Mascotas")" class="row g-2 mb-4" role="search">
-    <div class="col-12 col-md-6 col-lg-5">
-        <label for="busqueda" class="visually-hidden">Buscar por nombre, especie, raza o dueño</label>
-        <input type="search" id="busqueda" name="busqueda" value="@busqueda" class="form-control"
-               placeholder="Buscar por nombre, especie, raza o dueño..." />
+<section class="sv-page-header" aria-labelledby="titulo-mascotas">
+    <div class="sv-page-header-top">
+        <div class="sv-page-heading">
+            <div class="sv-page-eyebrow">Catálogo de pacientes</div>
+            <h1 id="titulo-mascotas">Mascotas</h1>
+            <p>Pacientes registrados en Patitas Felices.</p>
+        </div>
+        <a class="sv-page-primary-action" asp-action="Crear">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" />
+            </svg>
+            Nueva mascota
+        </a>
     </div>
-    <div class="col-auto d-flex gap-2">
-        <button type="submit" class="btn sv-btn-secundario">Buscar</button>
-        @if (!string.IsNullOrWhiteSpace(busqueda))
-        {
-            <a class="btn sv-btn-secundario" asp-action="Index">Limpiar</a>
-        }
+
+    <div class="sv-page-stats" aria-label="Resumen del catálogo">
+        <div class="sv-stat-chip">
+            <div class="ico sv-stat-ico-blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" aria-hidden="true">
+                    <path d="M12 2v20M17 5l-5-3-5 3M17 19l-5 3-5-3" />
+                </svg>
+            </div>
+            <b>@totalMascotas</b><span>pacientes en total</span>
+        </div>
+        <div class="sv-stat-chip">
+            <div class="ico sv-stat-ico-teal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" aria-hidden="true">
+                    <path d="m5 12 4 4L19 6" />
+                </svg>
+            </div>
+            <b>@mascotasActivas</b><span>activas</span>
+        </div>
+        <div class="sv-stat-chip">
+            <div class="ico sv-stat-ico-purple">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" aria-hidden="true">
+                    <rect x="4" y="4" width="6" height="6" rx="1" /><rect x="14" y="4" width="6" height="6" rx="1" /><rect x="4" y="14" width="6" height="6" rx="1" /><rect x="14" y="14" width="6" height="6" rx="1" />
+                </svg>
+            </div>
+            <b>@totalEspecies</b><span>especies distintas</span>
+        </div>
     </div>
-</form>
+
+    <div class="sv-page-search-row">
+        <form class="sv-page-search" role="search" onsubmit="return false;">
+            <label for="busqueda" class="visually-hidden">Buscar por nombre, especie, raza o dueño</label>
+            <svg class="sv-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" />
+            </svg>
+            <input type="search" id="busqueda" value="@busqueda" placeholder="Buscar por nombre, especie, raza o dueño..." autocomplete="off" />
+        </form>
+        <div class="sv-filter-list" role="group" aria-label="Filtrar por especie">
+            <button type="button" class="sv-filter-chip active" data-especie="">Todas</button>
+            @foreach (var especieDisponible in especiesDisponibles)
+            {
+                <button type="button" class="sv-filter-chip" data-especie="@especieDisponible">@especieDisponible</button>
+            }
+        </div>
+    </div>
+</section>
 
 @if (Model.Count == 0)
 {
@@ -40,7 +77,7 @@
 }
 else
 {
-    <div class="row g-3">
+    <div id="sv-catalogo-grid" class="row g-3">
         @foreach (var mascota in Model)
         {
             <div class="col-6 col-sm-6 col-lg-4">
@@ -54,48 +91,32 @@ else
         "conejo" => "sv-cabeza-img sv-cabeza-conejo",
         "loro" => "sv-cabeza-img sv-cabeza-loro",
         _ => ""
-    };
+                    };
 }
                     <div class="sv-tarjeta-cabeza @claseCabeza">
-                        <div class="d-flex align-items-center gap-2 min-w-0">
-                            <span class="sv-avatar" aria-hidden="true">
-                                <partial name="_IconoEspecie" model="mascota.Especie" />
-                            </span>
-                            <div class="min-w-0">
-                                <h3 class="sv-tarjeta-nombre mb-0 text-truncate" title="@mascota.Nombre">@mascota.Nombre</h3>
-                                <span class="sv-tarjeta-sub text-truncate d-block" title="@mascota.Especie">@mascota.Especie</span>
+                        <div class="sv-tarjeta-identidad">
+                            <div class="d-flex align-items-center gap-2 min-w-0">
+                                <span class="sv-avatar" aria-hidden="true">
+                                    <partial name="_IconoEspecie" model="mascota.Especie" />
+                                </span>
+                                <div class="min-w-0">
+                                    <h3 class="sv-tarjeta-nombre mb-0 text-truncate" title="@mascota.Nombre">@mascota.Nombre</h3>
+                                    <span class="sv-tarjeta-sub text-truncate d-block" title="@mascota.Especie">@mascota.Especie</span>
+                                </div>
+                            </div>
+                            <div class="sv-tarjeta-dueno">
+                                <span class="sv-dueno-icono" aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664z"/>
+                                    </svg>
+                                </span>
+                                <div class="min-w-0">
+                                    <span class="sv-tarjeta-etiqueta">Dueño</span>
+                                    <span class="sv-tarjeta-dueno-nombre text-truncate d-block" title="@mascota.NombreDelDuenio">@mascota.NombreDelDuenio</span>
+                                </div>
                             </div>
                         </div>
                         <span class="sv-estado @(mascota.EstaActivo ? "" : "inactivo")">@(mascota.EstaActivo ? "Activo" : "Inactivo")</span>
-                    </div>
-                    <dl class="sv-tarjeta-datos">
-                        <div>
-                            <dt>Raza</dt>
-                            <dd>@mascota.Raza</dd>
-                        </div>
-                        <div>
-                            <dt>Sexo</dt>
-                            <dd>@(mascota.Sexo == Sexo.Macho ? "Macho" : "Hembra")</dd>
-                        </div>
-                        <div>
-                            <dt>Edad</dt>
-                            <dd>@mascota.EdadEnMeses meses</dd>
-                        </div>
-                        <div>
-                            <dt>Peso</dt>
-                            <dd>@mascota.PesoEnKg.ToString("0.##") kg</dd>
-                        </div>
-                    </dl>
-                    <div class="sv-tarjeta-dueno">
-                        <span class="sv-dueno-icono" aria-hidden="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664z"/>
-                            </svg>
-                        </span>
-                        <div class="min-w-0">
-                            <span class="sv-tarjeta-etiqueta">Dueño</span>
-                            <span class="sv-tarjeta-dueno-nombre text-truncate d-block" title="@mascota.NombreDelDuenio">@mascota.NombreDelDuenio</span>
-                        </div>
                     </div>
                     <div class="sv-tarjeta-pie">
                         <a class="sv-enlace-tarjeta" href="@Url.Action(nameof(MascotasController.Detalles), "Mascotas", new { id = mascota.Id })">Ver ficha
@@ -126,6 +147,10 @@ else
                 </div>
             </div>
         }
+    </div>
+    <div id="sv-catalogo-sin-resultados" class="sv-vacio sv-catalogo-sin-resultados" hidden>
+        <p class="mb-2">No se encontraron mascotas con esos filtros.</p>
+        <a class="btn sv-btn-primario" asp-action="Crear">Registrar mascota</a>
     </div>
 }
 

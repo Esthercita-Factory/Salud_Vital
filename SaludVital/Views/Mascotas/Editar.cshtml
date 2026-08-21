@@ -1,40 +1,58 @@
 @model Mascota
 @{
     ViewData["Title"] = "Editar mascota";
+    var totalMascotas = (int?)ViewBag.TotalMascotas ?? 0;
+    var totalEspecies = (int?)ViewBag.TotalEspecies ?? 0;
+    var consultasEnEspera = (int?)ViewBag.ConsultasEnEspera ?? 0;
 }
 
-<div class="sv-cabecera-ficha">
-    <div>
-        <h1 class="sv-titulo-pagina mb-1">Editar mascota</h1>
-        <p class="sv-subtitulo mb-0">Modifique los datos de @Model.Nombre.</p>
-    </div>
-    <a class="btn sv-btn-secundario" asp-action="Detalles" asp-route-id="@Model.Id">Volver a la ficha</a>
-</div>
-
-<div class="row g-4 align-items-stretch">
-    <div class="col-12 col-lg-5 order-first order-lg-last">
-        <div class="sv-panel-huellas sv-panel-foto" aria-hidden="true">
-            <img class="sv-panel-foto-img" src="~/images/Veterinaria-4.png" alt="Veterinaria" />
-            <div class="sv-panel-foto-overlay">
-                <p class="sv-panel-titulo sv-frase-escritura">Actualiza a @Model.Nombre</p>
-                <p class="sv-panel-subtitulo">Revisa los datos del paciente y guarda los cambios cuando termines.</p>
-            </div>
+<div class="sv-crear-mascota sv-editar-mascota">
+    <div class="sv-cabecera-ficha">
+        <div>
+            <h1 class="sv-titulo-pagina mb-1">Editar mascota</h1>
+            <p class="sv-subtitulo mb-0">Modifique los datos de @Model.Nombre.</p>
         </div>
+        <a class="btn sv-btn-secundario" asp-action="Detalles" asp-route-id="@Model.Id">Volver a la ficha</a>
     </div>
-    <div class="col-12 col-lg-7">
-        <div class="sv-ficha">
+
+    <div class="sv-crear-layout">
+        <section class="sv-card" aria-labelledby="titulo-formulario-editar">
             <form asp-action="Editar" method="post">
                 <input type="hidden" asp-for="Id" />
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
+                <h2 id="titulo-formulario-editar" class="visually-hidden">Datos para editar la mascota</h2>
                 <partial name="_CamposMascota" model="Model" />
 
-                <div class="mt-4 d-flex gap-2">
-                    <button type="submit" class="btn sv-btn-primario">Guardar cambios</button>
+                <div class="sv-form-actions">
+                    <button type="submit" class="sv-btn-primary">Guardar cambios</button>
                     <a class="btn sv-btn-secundario" asp-action="Detalles" asp-route-id="@Model.Id">Cancelar</a>
                 </div>
             </form>
-        </div>
+        </section>
+
+        <aside class="sv-side" aria-label="Resumen de SaludVital">
+            <div class="sv-side-paws" aria-hidden="true"></div>
+
+            <div class="sv-side-top">
+                <div class="sv-side-kicker">Signos vitales</div>
+                <h3>Actualizar también<br />es cuidar.</h3>
+                <p>Revisa los datos de @Model.Nombre y mantén su historial clínico actualizado en SaludVital.</p>
+            </div>
+
+            <div class="sv-pulse-wrap" aria-hidden="true">
+                <svg viewBox="0 0 400 130" preserveAspectRatio="none">
+                    <path class="sv-pulse-line" d="M0,65 L70,65 L95,30 L115,100 L140,20 L160,65 L230,65 L250,45 L270,65 L400,65" />
+                    <circle class="sv-pulse-dot" cx="115" cy="100" r="3" />
+                </svg>
+            </div>
+
+            <div class="sv-side-stats">
+                <div><b>@totalMascotas</b><span>Pacientes</span></div>
+                <div><b>@totalEspecies</b><span>Especies</span></div>
+                <div><b>@consultasEnEspera</b><span>En espera</span></div>
+            </div>
+        </aside>
     </div>
 </div>
 
